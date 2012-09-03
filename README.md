@@ -1,12 +1,27 @@
 # SilverStripe Advertisement Management module
 
-A simple module to manage advertisements on pages. 
+A simple module to manage advertisements on pages.
+
+This is based on the silverstripe-advertisements module created by Marcus
+Nyeholt from https://github.com/nyeholt/silverstripe-advertisements. It will 
+conflict with that module, so do NOT install both.
+
+The key differences between Nyeholt's advertisements module and this one
+are:
+- Advertisements are HTML instead of only images. This allows more freedom 
+  over advertisement content, including allowing HTML 5, flash, and even 
+  advertisements from external advertising services such as Google AdSense 
+  and Chitika
+- Multiple advertising banners of different sizes can be specified
+- Advertisements are served at random (from within the selected campaigns
+  or advertisements) based on the given banner size (e.g., a 160x600 
+  advertising slot will only show advertisements with a size of 160x600)
 
 ## Maintainer Contact
 
-Marcus Nyeholt
+Hans de Ruiter
 
-<marcus (at) silverstripe (dot) com (dot) au>
+<Hans (at) hdrlab (dot) org (dot) nz>
 
 ## Requirements
 
@@ -15,42 +30,24 @@ ItemSetField module from http://github.com/ajshort/silverstripe-itemsetfield
 
 ## Documentation
 
-Add 
-
-`Object::add_extension('Page', 'AdvertisementExtension');`
-`Object::add_extension('SiteConfig', 'AdvertisementExtension');`
-
-to your _config.php file.
+Simply install the module using the standard method.
 
 Note that ads are inherited hierarchically, so setting ads on the Site Config 
 will mean those ads are used across all pages unless specified for a content
-tree otherwise. 
-
+tree otherwise. All existing pages will initially be set to not inherit, so you will 
+have to change this manually.
 
 * Navigate to the "Ads" section
 * Create some Advertisements
 * If you want to group the ads in a collection, create an Ad Campaign. These in turn can be associated with a client. 
 * On the Advertisements tab of a page (or Site Config), you can select the individual ads (or campaign) to be displayed. 
-* In your page template, use the AdList collection to actually list out the Ads to be displayed. Use the "Me" or "SetRatioSize" helpers to output an image linked as needed for proper click tracking. 
+* In your page template, use the AdList collection to actually list out the Ads to be displayed. Use the $DisplayAd($width, $height) function
 
-	<% control SiteConfig.AdList %>
-	<div class="ad">
-		$Me
-		<!-- Or, to scale it appropriately -->
-		$SetRatioSize(120,80)
-	
-	</div>
-	<% end_control %>
-
-* You can have complete control over how things are output by referring to the ad's Image and Link accessors. Be aware that if you're going to manually output the link, to include a special attribute used if tracking ad views (eg Advertisement::$use_js_tracking = true). So, output something like
-
-	<a href="$Link" class="adlink" adid="$ID"><img src="$Image.Link" /></a>
-
+	$DisplayAd(160, 600)
 
 Check the Advertisement class for more. 
 
 ## TODO
 
-Add extension method and include for doing a rotating ad banner
-across all pages. You can do these manually for now via Page_Controller
-if you want. Just select all Ads and iterate the collection
+* Enable advertisement's HTML content to be edited using an HTML editor in addition to raw HTML (raw HTML is used right now to avoid TinyMCE's validation restrictions on items such as javascript)
+* Versioning for advertisements (including having draft and published states)

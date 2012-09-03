@@ -3,6 +3,7 @@
 /**
  * Description of Advertisement
  *
+ * @author Hans de Ruiter <hans@hdrlab.org.nz>
  * @author Marcus Nyeholt <marcus@silverstripe.com.au>
  * @license BSD http://silverstripe.org/BSD-license
  */
@@ -13,12 +14,14 @@ class Advertisement extends DataObject {
 	public static $db = array(
 		'Title'				=> 'Varchar',
 		'TargetURL'			=> 'Varchar(255)',
+		'AdContent'			=> 'HTMLText',
+		'Width'				=> 'Int',
+		'Height'			=> 'Int',
 	);
 	
 	public static $has_one = array(
 		'InternalPage'		=> 'Page',
-		'Campaign'			=> 'AdCampaign',
-		'Image'				=> 'Image',
+		'Campaign'			=> 'AdCampaign'
 	);
 	
 	public static $summary_fields = array('Title');
@@ -27,7 +30,10 @@ class Advertisement extends DataObject {
 		$fields = new FieldSet();
 		$fields->push(new TabSet('Root', new Tab('Main', 
 			new TextField('Title', 'Title'),
-			new TextField('TargetURL', 'Target URL')
+			new TextField('TargetURL', 'Target URL'),
+			new NumericField('Width', 'Width'),
+			new NumericField('Height', 'Height'),
+			new TextareaField('AdContent', 'Advertisement Content', 20, 20)
 		)));
 		
 		if ($this->ID) {
@@ -36,11 +42,13 @@ class Advertisement extends DataObject {
 
 			$fields->addFieldToTab('Root.Main', new ReadonlyField('Impressions', 'Impressions', $impressions), 'Title');
 			$fields->addFieldToTab('Root.Main', new ReadonlyField('Clicks', 'Clicks', $clicks), 'Title');
+
+			$previewLink = Director::absoluteBaseURL() . 'admin/' . AdAdmin::$url_segment . '/preview/' . $this->ID;
 			
 			$fields->addFieldsToTab('Root.Main', array(
-				new ImageField('Image'),
 				new Treedropdownfield('InternalPageID', 'Internal Page Link', 'Page'),
-				new HasOnePickerField($this, 'Campaign', 'Ad Campaign')
+				new HasOnePickerField($this, 'Campaign', 'Ad Campaign'),
+				new LiteralField('PreviewNewsletter', "<a href=\"$previewLink\" target=\"_blank\">" . _t('PREVIEWADVERTISEMENT', 'Preview this advertisement') . "</a>")
 			));
 		}
 
@@ -48,6 +56,22 @@ class Advertisement extends DataObject {
 	}
 	
 	protected $impressions;
+	
+	/** Returns true if this is an "external" advertisment (e.g., one from Google AdSense).
+	 * "External" advertisements have no target URL or page.
+	 */
+	 protected function isExternalAd() {
+	 	 if(!$this->InternalPageID && empty($this->TargetURL)) {
+	 	 	 return true;
+	 	 }
+	 	 else {
+	 	 	 return false;
+	 	 }
+	 }
+	 
+	 public function HaveLink() {
+	 	 return !$this->isExternalAd();
+	 }
 
 	public function getImpressions() {
 		if (!$this->impressions) {
@@ -59,7 +83,6 @@ class Advertisement extends DataObject {
 			if ($obj) {
 				$this->impressions = $obj['Impressions'];
 			}
-			
 		}
 
 		return $this->impressions;
@@ -69,6 +92,11 @@ class Advertisement extends DataObject {
 	
 	public function getClicks() {
 		if (!$this->clicks) {
+			if($this->isExternalAd())
+			{
+				return 'Not Applicable (external advertisement)';
+			}
+			
 			$query = new SQLQuery('COUNT(*) AS Clicks', 'AdImpression', '"ClassName" = \'AdClick\' AND "AdID" = '.$this->ID);
 			$res = $query->execute();
 			$obj = $res->first();
@@ -82,39 +110,21 @@ class Advertisement extends DataObject {
 		return $this->clicks;
 	}
 	
-	public function forTemplate($width = null, $height = null) {
-		$inner = Convert::raw2xml($this->Title);
-		if ($this->ImageID && $this->Image()->ID) {
-			if ($width) {
-                $converted = $this->Image()->SetRatioSize($width, $height);
-                if ($converted) {
-                    $inner = $converted->forTemplate();
-                }
-				
-			} else {
-                $inner = $this->Image()->forTemplate();
-			}
-		}
-		
-		$class = '';
-		if (self::$use_js_tracking) {
-			$class = 'class="adlink" ';
-		}
-		
-		$tag = '<a '.$class.' href="'.$this->Link().'" adid="'.$this->ID.'">'.$inner.'</a>';
-
-		return $tag;
+	public function forTemplate() {
+		$template = new SSViewer('Advertisement');
+		return $template->process($this);
 	}
 	
-	public function SetRatioSize($width, $height) {
-		return $this->forTemplate($width, $height);
+	public function UseJSTracking()
+	{
+		return self::$use_js_tracking;
 	}
 	
 	public function Link() {
 		if (self::$use_js_tracking) {
 			Requirements::javascript(THIRDPARTY_DIR.'/jquery/jquery-packed.js');
 			Requirements::javascript(THIRDPARTY_DIR.'/jquery-livequery/jquery.livequery.js');
-			Requirements::javascript('advertisements/javascript/advertisements.js');
+			Requirements::javascript('AdManager/javascript/advertisements.js');
 
 			$link = Convert::raw2att($this->InternalPageID ? $this->InternalPage()->AbsoluteLink() : $this->TargetURL);
 			
