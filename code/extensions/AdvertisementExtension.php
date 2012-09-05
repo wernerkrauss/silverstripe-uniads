@@ -50,7 +50,7 @@ class AdvertisementExtension extends DataObjectDecorator {
 			if(!$toUse->ParentID && $toUse->InheritSettings)
 			{
 				// Using the SiteConfig's settings
-				$toUse = Controller::curr()->SiteConfig();
+				$toUse = SiteConfig::current_site_config();
 			}
 		}
 		
