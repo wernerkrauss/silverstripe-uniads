@@ -17,11 +17,16 @@ class Advertisement extends DataObject {
 		'AdContent'			=> 'HTMLText',
 		'Width'				=> 'Int',
 		'Height'			=> 'Int',
+		'Weight'			=> 'Double'
 	);
 	
 	public static $has_one = array(
 		'InternalPage'		=> 'Page',
 		'Campaign'			=> 'AdCampaign'
+	);
+	
+	public static $defaults = array(
+		'Weight'			=> 1.0
 	);
 	
 	public static $summary_fields = array('Title');
@@ -33,6 +38,7 @@ class Advertisement extends DataObject {
 			new TextField('TargetURL', 'Target URL'),
 			new NumericField('Width', 'Width'),
 			new NumericField('Height', 'Height'),
+			new NumericField('Weight', 'Weight (controls how often it will be shown relative to others)'),
 			new TextareaField('AdContent', 'Advertisement Content', 20, 20)
 		)));
 		

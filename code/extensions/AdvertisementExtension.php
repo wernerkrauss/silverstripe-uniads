@@ -56,14 +56,21 @@ class AdvertisementExtension extends DataObjectDecorator {
 		
 		// If set to use a campaign, just switch to that as our context. 
 		if ($toUse->UseCampaignID) {
-
-			$ads = DataObject::get('Advertisement', '"CampaignID" = \'' . $toUse->UseCampaignID . 
-				'\' AND "Width" = \'' . $width . '\' AND "Height" = \'' . $height . '\'', 'Rand()', '', 1);
+			$baseWhereClause = '"CampaignID" = \'' . $toUse->UseCampaignID . 
+				'\' AND "Width" = \'' . $width . '\' AND "Height" = \'' . $height . '\'';
+			$ads = DataObject::get('Advertisement', $baseWhereClause . 
+				' AND "Weight" >= (Rand() * (SELECT MAX(Weight) FROM "Advertisement" WHERE ' . 
+				$baseWhereClause . '))', 'Rand()', '', 1);
 		}
 		else
 		{
-			$ads = $toUse->getManyManyComponents('Advertisements', '"Width" = \'' . $width .
-				'\' AND "Height" = \'' . $height . '\'', 'Rand()', '', 1);
+			$adJoin = $toUse->getManyManyJoin('Advertisements','Advertisement');
+			$adFilter = $toUse->getManyManyFilter('Advertisements','Advertisement');
+			$baseWhereClause = '"Width" = \'' . $width .
+				'\' AND "Height" = \'' . $height . '\'';
+			$ads = $toUse->getManyManyComponents('Advertisements', $baseWhereClause .
+				' AND "Weight" >= (Rand() * (SELECT MAX(Weight) FROM "Advertisement" ' . $adJoin . ' WHERE ' . 
+				$baseWhereClause . ' AND ' . $adFilter . '))', 'Rand()', '', 1);
 		}
 		
 		$ad = null;
