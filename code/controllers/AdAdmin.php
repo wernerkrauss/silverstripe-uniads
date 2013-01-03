@@ -3,6 +3,7 @@
 /**
  * Description of AdAdmin
  *
+ * @author Elvinas Liutkevičius <elvinas@unisolutions.eu>
  * @author Marcus Nyeholt <marcus@silverstripe.com.au>
  * @license BSD http://silverstripe.org/BSD-license
  */
@@ -11,17 +12,24 @@ class AdAdmin extends ModelAdmin {
 		'Advertisement',
 		'AdCampaign',
 		'AdClient',
+		'AdZone',
 	);
 
 	static $allowed_actions = array(
 		'preview'
 	);
 
-	static $url_rule = '/$Action/$ID/$OtherID';
-	
+	static $url_rule = '/$ModelClass/$Action/$ID/$OtherID';
+
 	public static $url_segment = 'advertisements';
 	public static $menu_title = 'Ads';
-	public static $collection_controller_class = "AdAdmin_Controller";
+	public static $menu_icon = '';
+
+
+	public function __construct() {
+		self::$menu_icon = ADS_MODULE_DIR . '/images/ads-icon.png';
+		parent::__construct();
+	}
 
 	/** Preview an advertisement.
 	 */
@@ -39,6 +47,7 @@ class AdAdmin extends ModelAdmin {
 
 		// No impression and click tracking for previews
 		Advertisement::$use_js_tracking = false;
+		Advertisement::$record_impressions = false;
 
 		// Block stylesheets and JS that are not required (using our own template)
 		Requirements::clear();
@@ -48,40 +57,3 @@ class AdAdmin extends ModelAdmin {
 		return $template->Process($ad);
 	}
 }
-
-class AdAdmin_Controller extends ModelAdmin_CollectionController {
-	function getResultsTable($searchCriteria) {
-		$summaryFields = $this->getResultColumns($searchCriteria);
-
-		if ($this->modelClass == 'Advertisement') {
-			$summaryFields = array(
-				'Title' => 'Title',
-				'Clicks' => 'Clicks',
-				'Impressions' => 'Impressions',
-			);
-		}
-		
-		$className = $this->parentController->resultsTableClassName();
-		$tf = new $className(
-			$this->modelClass,
-			$this->modelClass,
-			$summaryFields
-		);
-
-		$tf->setCustomQuery($this->getSearchQuery($searchCriteria));
-		$tf->setPageSize($this->parentController->stat('page_length'));
-		$tf->setShowPagination(true);
-		// @todo Remove records that can't be viewed by the current user
-		$tf->setPermissions(array_merge(array('view','export'), TableListField::permissions_for_object($this->modelClass)));
-
-		// csv export settings (select all columns regardless of user checkbox settings in 'ResultsAssembly')
-		$exportFields = $this->getResultColumns($searchCriteria, false);
-		$tf->setFieldListCsv($exportFields);
-
-		$url = '<a href=\"' . $this->Link() . '/$ID/edit\">$value</a>';
-		$tf->setFieldFormatting(array_combine(array_keys($summaryFields), array_fill(0,count($summaryFields), $url)));
-	
-		return $tf;
-	}
-}
-

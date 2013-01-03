@@ -7,7 +7,7 @@
 <% base_tag %>
 </head>
 <body style="text-align: center; background-color: #000;">
-	<div style="text-align: left; margin: 0 auto; padding: 0px; background-color: #FFF; width: {$Width}px; height: {$Height}px;">
+	<div style="text-align: left; margin: 0 auto; padding: 0px; background-color: #FFF; width: $Zone.getWidth; height: $Zone.getHeight; overflow: hidden;">
 		$Me
 	</div>
 </body>

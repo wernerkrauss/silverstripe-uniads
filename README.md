@@ -3,51 +3,63 @@
 A simple module to manage advertisements on pages.
 
 This is based on the silverstripe-advertisements module created by Marcus
-Nyeholt from https://github.com/nyeholt/silverstripe-advertisements. It will 
-conflict with that module, so do NOT install both.
+Nyeholt from https://github.com/nyeholt/silverstripe-advertisements and
+silverstripe-AdManager module created by Hans de Ruiter from
+https://github.com/hdrlab/silverstripe-AdManager.
+It will conflict with those modules, so do NOT install them.
 
-The key differences between Nyeholt's advertisements module and this one
+This is fork from https://github.com/hdrlab/silverstripe-AdManager, so key
+differences between de Ruiter's AdManager module and this one
 are:
-- Advertisements are HTML instead of only images. This allows more freedom 
-  over advertisement content, including allowing HTML 5, flash, and even 
-  advertisements from external advertising services such as Google AdSense 
-  and Chitika
+- This module is compatible with Silverstripe 3
+- Removed all dependancies to other modules (ItemSetField)
+- Default ads configuration in the Site Config removed. Ads are now shown
+  depending on Start date, Expiration date and Active status on Ad and Ad Campaign.
+- Ad Zones added. Now ads should be assigned to an Ad Zone.
+- Advertisements can be uploaded to CMS. It can be any type of image or flash file.
 - Multiple advertising banners of different sizes can be specified
-- Advertisements are served at random (from within the selected campaigns
-  or advertisements) based on the given banner size (e.g., a 160x600 
-  advertising slot will only show advertisements with a size of 160x600)
+- Advertisements are served at random (from within the selected campaigns or
+  advertisements) based on the given Ad Zone. So it is now possible to display
+  two banners with the same dimensions on the same page.
 
 ## Maintainer Contact
 
-Hans de Ruiter
+Elvinas Liutkevičius
 
-<Hans (at) hdrlab (dot) org (dot) nz>
+<elvinas (at) unisolutions (dot) eu>
 
 ## Requirements
 
-SilverStripe 2.4.x
-ItemSetField module from http://github.com/ajshort/silverstripe-itemsetfield
+SilverStripe 3
 
 ## Documentation
 
 Simply install the module using the standard method.
 
-Note that ads are inherited hierarchically, so setting ads on the Site Config 
-will mean those ads are used across all pages unless specified for a content
-tree otherwise. All existing pages will initially be set to not inherit, so you will 
+Note that ads are inherited hierarchically, so activating ads will mean
+those ads are used across all pages unless otherwise specified in a content
+tree. All existing pages will initially be set to not inherit, so you will
 have to change this manually.
 
 * Navigate to the "Ads" section
+* Create some Zones
 * Create some Advertisements
-* If you want to group the ads in a collection, create an Ad Campaign. These in turn can be associated with a client. 
-* On the Advertisements tab of a page (or Site Config), you can select the individual ads (or campaign) to be displayed. 
-* In your page template, use the AdList collection to actually list out the Ads to be displayed. Use the $DisplayAd($width, $height) function
+* If you want to group the ads in a collection, create an Ad Campaign. These in turn can be associated with a client.
+* On the Advertisements tab of a page, you can select the individual ads (or campaign) to be displayed.
+* In your page template, use the $DisplayAd($zone) function
 
-	$DisplayAd(160, 600)
+	$DisplayAd(TopZone) or $DisplayAd(LeftZone)
 
-Check the Advertisement class for more. 
 
-## TODO
+It is possible to create an Ad Zone (subzone) with a parent Ad Zone. This
+allows you to create an additional Ad Zone in page without editing the page
+template. You can arrange the subzones in your way by specifying the Order value.
+The ads will be shown in this way:
 
-* Enable advertisement's HTML content to be edited using an HTML editor in addition to raw HTML (raw HTML is used right now to avoid TinyMCE's validation restrictions on items such as javascript)
-* Versioning for advertisements (including having draft and published states)
+Ad in Zone (if exists)
+Ad in Subzone1
+Ad in Subzone2
+...
+
+
+Check the Advertisement class for more.
