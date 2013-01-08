@@ -13,6 +13,7 @@ class AdZone extends DataObject {
 		'ZoneWidth' => 'Varchar(6)',
 		'ZoneHeight' => 'Varchar(6)',
 		'Order' => 'Int',
+		'Active' => 'Boolean',
 	);
 
 	public static $summary_fields = array(
@@ -32,6 +33,10 @@ class AdZone extends DataObject {
 
 	public static $indexes = array(
 		'Title' => true,
+	);
+
+	public static $defaults = array(
+		'Active' => 1,
 	);
 
 	public static $default_records = array(

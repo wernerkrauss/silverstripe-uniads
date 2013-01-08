@@ -48,7 +48,7 @@ class AdvertisementExtension extends DataExtension {
 
 		if ($zone) {
 			if (!is_object($zone)) {
-				$zone = DataObject::get_one('AdZone', "Title = '".Convert::raw2sql($zone)."'");
+				$zone = DataObject::get_one('AdZone', "Title = '".Convert::raw2sql($zone)."' and Active = 1");
 			}
 			if ($zone) {
 				$toUse = $this->owner;
@@ -134,7 +134,9 @@ class AdvertisementExtension extends DataExtension {
 
 		if ($zone) {
 			foreach ($zone->ChildZones()->sort('Order') as $child) {
-				$output .= $this->DisplayAd($child);
+				if ($child->Active) {
+					$output .= $this->DisplayAd($child);
+				}
 			}
 		}
 
