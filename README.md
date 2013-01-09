@@ -56,10 +56,10 @@ allows you to create an additional Ad Zone in page without editing the page
 template. You can arrange the subzones in your way by specifying the Order value.
 The ads will be shown in this way:
 
-Ad in Zone (if exists)
-Ad in Subzone1
-Ad in Subzone2
-...
+	Ad in Zone (if exists)
+	Ad in Subzone1
+	Ad in Subzone2
+	...
 
 
 Check the Advertisement class for more.
