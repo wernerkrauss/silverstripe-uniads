@@ -22,6 +22,7 @@ class Advertisement extends DataObject {
 		'Expires' => 'Date',
 		'Active' => 'Boolean',
 		'TargetURL' => 'Varchar(255)',
+		'NewWindow' => 'Boolean',
 		'AdContent' => 'HTMLText',
 		'ImpressionLimit' => 'Int',
 		'Weight' => 'Double',
@@ -41,6 +42,7 @@ class Advertisement extends DataObject {
 
 	public static $defaults = array(
 		'Active' => 0,
+		'NewWindow' => 1,
 		'ImpressionLimit' => 0,
 		'Weight' => 1.0,
 	);
@@ -97,6 +99,7 @@ class Advertisement extends DataObject {
 				new NumericField('Weight', 'Weight (controls how often it will be shown relative to others)'),
 				new TextField('TargetURL', 'Target URL'),
 				new Treedropdownfield('InternalPageID', 'Internal Page Link', 'Page'),
+				new CheckboxField('NewWindow', 'Open in a new Window'),
 				$file = new UploadField('File', 'Advertisement File'),
 				$AdContent = new TextareaField('AdContent', 'Advertisement Content'),
 				$Starts = new DateField('Starts', 'Starts'),
