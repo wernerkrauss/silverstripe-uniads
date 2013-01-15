@@ -133,17 +133,22 @@ class Advertisement extends DataObject {
 	/** Returns true if this is an "external" advertisment (e.g., one from Google AdSense).
 	 * "External" advertisements have no target URL or page.
 	 */
-	 protected function isExternalAd() {
-	 	 if(!$this->InternalPageID && empty($this->TargetURL)) {
-	 	 	 return true;
-	 	 } else {
-	 	 	 return false;
-	 	 }
-	 }
+	protected function isExternalAd() {
+		if (!$this->InternalPageID && empty($this->TargetURL)) {
+			return true;
+		}
 
-	 public function HaveLink() {
-	 	 return !$this->isExternalAd();
-	 }
+		$file = $this->getComponent('File');
+		if ($file && $file->appCategory() == 'flash') {
+			return true;
+		}
+
+		return false;
+	}
+
+	public function HaveLink() {
+		return !$this->isExternalAd();
+	}
 
 	protected $impressions;
 	public function getImpressions() {
@@ -219,16 +224,16 @@ class Advertisement extends DataObject {
 			if ($file->appCategory() == 'flash') {
 				return '
 					<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="'.$zone->Width.'" height="'.$zone->Height.'">
-					<param name="movie" value="'.$file->Filename.'" />
-					<param name="quality" value="high" />
-					<embed
-						src="'.$this->File->Filename.'"
-						quality="high"
-						width="'.$zone->Width.'"
-						height="'.$zone->Height.'"
-						type="application/x-shockwave-flash"
-						pluginspage="http://www.macromedia.com/go/getflashplayer">
-					</embed>
+						<param name="movie" value="'.$file->Filename.'" />
+						<param name="quality" value="high" />
+						<embed
+							src="'.$file->Filename.'"
+							quality="high"
+							width="'.$zone->Width.'"
+							height="'.$zone->Height.'"
+							type="application/x-shockwave-flash"
+							pluginspage="http://www.macromedia.com/go/getflashplayer">
+						</embed>
 					</object>
 				';
 			} else if ($file->appCategory() == 'image') {
