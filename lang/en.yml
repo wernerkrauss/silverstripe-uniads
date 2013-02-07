@@ -13,7 +13,7 @@ lt:
     db_NewWindow: 'Open in a new Window'
     db_AdContent: 'Advertisement Content'
     db_ImpressionLimit: 'Impression Limit'
-    db_Weight: 'Weight (controls how often it will be shown relative to others)
+    db_Weight: 'Weight (controls how often it will be shown relative to others)'
     db_Impressions: 'Impressions'
     db_Clicks: 'Clicks'
     has_one_File: 'Advertisement File'
