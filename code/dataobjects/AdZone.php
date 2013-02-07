@@ -17,9 +17,10 @@ class AdZone extends DataObject {
 	);
 
 	public static $summary_fields = array(
-		'Title' => 'Title',
-		'ParentZone.Title' => 'Parent Zone',
-		'Order' => 'Order',
+		'Title',
+		'ParentZone.Title',
+		'Order',
+		'Active',
 	);
 
 	public static $has_one = array(

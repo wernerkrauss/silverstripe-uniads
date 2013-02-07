@@ -13,7 +13,7 @@ class AdClient extends DataObject {
 		'ContactEmail' => 'Text',
 	);
 	public static $summary_fields = array(
-		'Title' => 'Title',
-		'ContactEmail' => 'Contact Email',
+		'Title',
+		'ContactEmail',
 	);
 }

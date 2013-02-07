@@ -47,14 +47,14 @@ class Advertisement extends DataObject {
 		'Weight' => 1.0,
 	);
 	public static $searchable_fields = array(
-		'Title' => 'Title',
+		'Title',
 	);
 	public static $summary_fields = array(
-		'Title' => 'Title',
-		'Campaign.Title' => 'Campaign',
-		'Zone.Title' => 'Zone',
-		'Clicks' => 'Clicks',
-		'Impressions' => 'Impressions',
+		'Title',
+		'Campaign.Title',
+		'Zone.Title',
+		'Clicks',
+		'Impressions',
 	);
 
 
@@ -79,10 +79,20 @@ class Advertisement extends DataObject {
 	}
 
 
+	function fieldLabels($includerelations = true) {
+		$labels = parent::fieldLabels($includerelations);
+
+		$labels['Clicks'] = _t('Advertisement.db_Clicks', 'Clicks');
+		$labels['Impressions'] = _t('Advertisement.db_Impressions', 'Impressions');
+
+		return $labels;
+	}
+
+
 	public function getCMSFields() {
 		$fields = new FieldList();
-		$fields->push(new TabSet('Root', new Tab('Main',
-			new TextField('Title', 'Title')
+		$fields->push(new TabSet('Root', new Tab('Main', _t('SiteTree.TABMAIN', 'Main')
+			, new TextField('Title', _t('Advertisement.db_Title', 'Title'))
 		)));
 
 		if ($this->ID) {
@@ -90,23 +100,23 @@ class Advertisement extends DataObject {
 			$clicks = $this->getClicks();
 			$previewLink = Director::absoluteBaseURL() . 'admin/' . AdAdmin::$url_segment . '/Advertisement/preview/' . $this->ID;
 
-			$fields->addFieldToTab('Root.Main', new ReadonlyField('Impressions', 'Impressions', $impressions), 'Title');
-			$fields->addFieldToTab('Root.Main', new ReadonlyField('Clicks', 'Clicks', $clicks), 'Title');
+			$fields->addFieldToTab('Root.Main', new ReadonlyField('Impressions', _t('Advertisement.db_Impressions', 'Impressions'), $impressions), 'Title');
+			$fields->addFieldToTab('Root.Main', new ReadonlyField('Clicks', _t('Advertisement.db_Clicks', 'Clicks'), $clicks), 'Title');
 
 			$fields->addFieldsToTab('Root.Main', array(
-				DropdownField::create('CampaignID', 'Campaign', DataList::create('AdCampaign')->map())->setEmptyString(' '),
-				DropdownField::create('ZoneID', 'Zone', DataList::create('AdZone')->map())->setEmptyString(' '),
-				new NumericField('Weight', 'Weight (controls how often it will be shown relative to others)'),
-				new TextField('TargetURL', 'Target URL'),
-				new Treedropdownfield('InternalPageID', 'Internal Page Link', 'Page'),
-				new CheckboxField('NewWindow', 'Open in a new Window'),
-				$file = new UploadField('File', 'Advertisement File'),
-				$AdContent = new TextareaField('AdContent', 'Advertisement Content'),
-				$Starts = new DateField('Starts', 'Starts'),
-				$Expires = new DateField('Expires', 'Expires'),
-				new NumericField('ImpressionLimit', 'Impression Limit'),
-				new CheckboxField('Active', 'Active'),
-				new LiteralField('PreviewNewsletter', "<a href=\"$previewLink\" target=\"_blank\">" . _t('PREVIEWADVERTISEMENT', 'Preview this advertisement') . "</a>"),
+				DropdownField::create('CampaignID', _t('Advertisement.has_one_Campaign', 'Campaign'), DataList::create('AdCampaign')->map())->setEmptyString(_t('Advertisement.Campaign_none', 'none')),
+				DropdownField::create('ZoneID', _t('Advertisement.has_one_Zone', 'Zone'), DataList::create('AdZone')->map())->setEmptyString(_t('Advertisement.Zone_select', 'select one')),
+				new NumericField('Weight', _t('Advertisement.db_Weight', 'Weight (controls how often it will be shown relative to others)')),
+				new TextField('TargetURL', _t('Advertisement.db_TargetURL', 'Target URL')),
+				new Treedropdownfield('InternalPageID', _t('Advertisement.has_one_InternalPage', 'Internal Page Link'), 'Page'),
+				new CheckboxField('NewWindow', _t('Advertisement.db_NewWindow', 'Open in a new Window')),
+				$file = new UploadField('File', _t('Advertisement.has_one_File', 'Advertisement File')),
+				$AdContent = new TextareaField('AdContent', _t('Advertisement.db_AdContent', 'Advertisement Content')),
+				$Starts = new DateField('Starts', _t('Advertisement.db_Starts', 'Starts')),
+				$Expires = new DateField('Expires', _t('Advertisement.db_Expires', 'Expires')),
+				new NumericField('ImpressionLimit', _t('Advertisement.db_ImpressionLimit', 'Impression Limit')),
+				new CheckboxField('Active', _t('Advertisement.db_Active', 'Active')),
+				new LiteralField('Preview', "<a href=\"$previewLink\" target=\"_blank\">" . _t('Advertisement.Preview', 'Preview this advertisement') . "</a>"),
 			));
 
 			$file->setFolderName(self::files_dir());
@@ -146,9 +156,9 @@ class Advertisement extends DataObject {
 		return false;
 	}
 
-	public function HaveLink() {
-		return !$this->isExternalAd();
-	}
+	 public function HaveLink() {
+	 	 return !$this->isExternalAd();
+	 }
 
 	protected $impressions;
 	public function getImpressions() {
@@ -192,8 +202,7 @@ class Advertisement extends DataObject {
 		return $template->process($this);
 	}
 
-	public function UseJSTracking()
-	{
+	public function UseJSTracking() {
 		return self::$use_js_tracking;
 	}
 
@@ -224,16 +233,16 @@ class Advertisement extends DataObject {
 			if ($file->appCategory() == 'flash') {
 				return '
 					<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="'.$zone->Width.'" height="'.$zone->Height.'">
-						<param name="movie" value="'.$file->Filename.'" />
-						<param name="quality" value="high" />
-						<embed
-							src="'.$file->Filename.'"
-							quality="high"
-							width="'.$zone->Width.'"
-							height="'.$zone->Height.'"
-							type="application/x-shockwave-flash"
-							pluginspage="http://www.macromedia.com/go/getflashplayer">
-						</embed>
+					<param name="movie" value="'.$file->Filename.'" />
+					<param name="quality" value="high" />
+					<embed
+						src="'.$file->Filename.'"
+						quality="high"
+						width="'.$zone->Width.'"
+						height="'.$zone->Height.'"
+						type="application/x-shockwave-flash"
+						pluginspage="http://www.macromedia.com/go/getflashplayer">
+					</embed>
 					</object>
 				';
 			} else if ($file->appCategory() == 'image') {

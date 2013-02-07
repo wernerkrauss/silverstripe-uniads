@@ -11,16 +11,16 @@
 class AdvertisementExtension extends DataExtension {
 
 	public static $db = array(
-		'InheritSettings'	=> 'Boolean',
+		'InheritSettings' => 'Boolean',
 	);
 	public static $defaults = array(
-		'InheritSettings'	=> true
+		'InheritSettings' => true
 	);
 	public static $many_many = array(
-		'Advertisements'			=> 'Advertisement',
+		'Advertisements' => 'Advertisement',
 	);
 	public static $has_one = array(
-		'UseCampaign'				=> 'AdCampaign',
+		'UseCampaign' => 'AdCampaign',
 	);
 
 	function getListboxOptions($o) {
@@ -31,12 +31,13 @@ class AdvertisementExtension extends DataExtension {
 	public function updateCMSFields(FieldList $fields) {
 		parent::updateCMSFields($fields);
 
-		$fields->addFieldToTab('Root.Advertisements', new CheckboxField('InheritSettings', _t('Advertisements.INHERIT', 'Inherit parent settings')));
+		$fields->findOrMakeTab('Root.Advertisements', _t('Advertisement.PLURALNAME', 'Advertisements'));
+		$fields->addFieldToTab('Root.Advertisements', new CheckboxField('InheritSettings', _t('Advertisement.InheritSettings', 'Inherit parent settings')));
 		$conf = GridFieldConfig_RelationEditor::create();
 		$conf->getComponentByType('GridFieldAddExistingAutocompleter')->setSearchFields(array('Title'));
-		$grid = new GridField("Advertisements", "Advertisements", $this->owner->Advertisements(), $conf);
+		$grid = new GridField("Advertisements", _t('Advertisement.PLURALNAME', 'Advertisements'), $this->owner->Advertisements(), $conf);
 		$fields->addFieldToTab("Root.Advertisements", $grid);
-		$fields->addFieldToTab('Root.Advertisements', new DropdownField('UseCampaignID', 'Use Campaign', $this->getListboxOptions('AdCampaign')));
+		$fields->addFieldToTab('Root.Advertisements', new DropdownField('UseCampaignID', _t('Advertisement.UseCampaign', 'Use Campaign'), $this->getListboxOptions('AdCampaign')));
 	}
 
 	/** Displays a randomly chosen advertisement of the specified dimensions.

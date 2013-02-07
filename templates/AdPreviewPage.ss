@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
-<title>Ad Preview: $Title</title>
+<title><%t Advertisement.PreviewTitle "Ad Preview:" %> $Title</title>
 <% base_tag %>
 </head>
 <body style="text-align: center; background-color: #000;">

@@ -1,0 +1,55 @@
+lt:
+  AdAdmin:
+    MENUTITLE: 'Ads'
+
+  Advertisement:
+    SINGULARNAME: 'Advertisement'
+    PLURALNAME: 'Advertisements'
+    db_Title: 'Title'
+    db_Starts: 'Starts'
+    db_Expires: 'Expires'
+    db_Active: 'Active'
+    db_TargetURL: 'Target URL'
+    db_NewWindow: 'Open in a new Window'
+    db_AdContent: 'Advertisement Content'
+    db_ImpressionLimit: 'Impression Limit'
+    db_Weight: 'Weight (controls how often it will be shown relative to others)
+    db_Impressions: 'Impressions'
+    db_Clicks: 'Clicks'
+    has_one_File: 'Advertisement File'
+    has_one_Zone: 'Zone'
+    has_one_Campaign: 'Campaign'
+    has_one_InternalPage: 'Internal Page Link'
+    Campaign_none: 'none'
+    Zone_select: 'select one'
+    Preview: 'Preview this advertisement'
+    PreviewTitle: 'Ad Preview:'
+    InheritSettings: 'Inherit parent settings'
+    UseCampaign: 'Use Campaign'
+
+  AdZone:
+    SINGULARNAME: 'Ad Zone'
+    PLURALNAME: 'Ad Zones'
+    db_Title: 'Title'
+    db_ZoneWidth: 'Zone Width'
+    db_ZoneHeight: 'Zone Height'
+    db_Order: 'Order'
+    db_Active: 'Active'
+    has_one_ParentZone: 'Parent Zone'
+    has_many_Advertisements: 'Advertisements'
+    has_many_ChildZones: 'Child Zones'
+
+  AdCampaign:
+    SINGULARNAME: 'Campaign'
+    PLURALNAME: 'Campaigns'
+    db_Title: 'Title'
+    db_Starts: 'Starts'
+    db_Expires: 'Expires'
+    db_Active: 'Active'
+    has_one_Client: 'Client'
+
+  AdClient:
+    SINGULARNAME: 'Client'
+    PLURALNAME: 'Clients'
+    db_Title: 'Title'
+    db_ContactEmail: 'Contact Email'

@@ -1,0 +1,55 @@
+lt:
+  AdAdmin:
+    MENUTITLE: 'Reklaminiai skydeliai'
+
+  Advertisement:
+    SINGULARNAME: 'Reklaminis skydelis'
+    PLURALNAME: 'Reklaminiai skydeliai'
+    db_Title: 'Pavadinimas'
+    db_Starts: 'Publikavimo pradžia'
+    db_Expires: 'Publikavimo pabaiga'
+    db_Active: 'Aktyvus'
+    db_TargetURL: 'Nuoroda'
+    db_NewWindow: 'Atsidaro naujame lange'
+    db_AdContent: 'Skydelio prog. kodas'
+    db_ImpressionLimit: 'Parodymų limitas'
+    db_Weight: 'Santykinis dažnis (nustato kaip dažnai parodomas skydelis, lygintat su kitais skydeliais)'
+    db_Impressions: 'Parodymų sk.'
+    db_Clicks: 'Paspaudimų sk.'
+    has_one_File: 'Skydelis'
+    has_one_Zone: 'Skydelių zona'
+    has_one_Campaign: 'Kampanija'
+    has_one_InternalPage: 'Nuoroda į vidinį puslapį'
+    Campaign_none: 'jokia'
+    Zone_select: 'pasirinkite'
+    Preview: 'Reklaminio skydelio peržiūra'
+    PreviewTitle: 'Peržiūra:'
+    InheritSettings: 'Paveldėti nustatymus iš aukštesnio puslapio'
+    UseCampaign: 'Naudoti kampaniją'
+
+  AdZone:
+    SINGULARNAME: 'Skydelių zona'
+    PLURALNAME: 'Skydelių zonos'
+    db_Title: 'Pavadinimas'
+    db_ZoneWidth: 'Publikavimo pradžia'
+    db_ZoneHeight: 'Publikavimo pabaiga'
+    db_Order: 'Eil. nr.'
+    db_Active: 'Aktyvus'
+    has_one_ParentZone: 'Priklauso zonai'
+    has_many_Advertisements: 'Reklaminiai skydeliai'
+    has_many_ChildZones: 'Priklausomos zonos'
+
+  AdCampaign:
+    SINGULARNAME: 'Kampanija'
+    PLURALNAME: 'Kampanijos'
+    db_Title: 'Pavadinimas'
+    db_Starts: 'Publikavimo pradžia'
+    db_Expires: 'Publikavimo pabaiga'
+    db_Active: 'Aktyvus'
+    has_one_Client: 'Klientas'
+
+  AdClient:
+    SINGULARNAME: 'Klientas'
+    PLURALNAME: 'Klientai'
+    db_Title: 'Pavadinimas'
+    db_ContactEmail: 'Kontaktinis el. pašto adresas'
