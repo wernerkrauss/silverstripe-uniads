@@ -246,7 +246,7 @@ class Advertisement extends DataObject {
 					</object>
 				';
 			} else if ($file->appCategory() == 'image') {
-				return '<img src="'.$file->URL.'" style="width:100%" alt="'.$file->Filename.'" />';
+				return '<img src="'.$file->URL.'" style="width:100%;display:block;" alt="'.$file->Filename.'" />';
 			}
 		}
 		return $this->AdContent;
