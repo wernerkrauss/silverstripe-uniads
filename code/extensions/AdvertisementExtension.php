@@ -33,11 +33,14 @@ class AdvertisementExtension extends DataExtension {
 
 		$fields->findOrMakeTab('Root.Advertisements', _t('Advertisement.PLURALNAME', 'Advertisements'));
 		$fields->addFieldToTab('Root.Advertisements', new CheckboxField('InheritSettings', _t('Advertisement.InheritSettings', 'Inherit parent settings')));
-		$conf = GridFieldConfig_RelationEditor::create();
-		$conf->getComponentByType('GridFieldAddExistingAutocompleter')->setSearchFields(array('Title'));
-		$grid = new GridField("Advertisements", _t('Advertisement.PLURALNAME', 'Advertisements'), $this->owner->Advertisements(), $conf);
-		$fields->addFieldToTab("Root.Advertisements", $grid);
-		$fields->addFieldToTab('Root.Advertisements', new DropdownField('UseCampaignID', _t('Advertisement.UseCampaign', 'Use Campaign'), $this->getListboxOptions('AdCampaign')));
+
+		if (!$this->owner->InheritSettings) {
+			$conf = GridFieldConfig_RelationEditor::create();
+			$conf->getComponentByType('GridFieldAddExistingAutocompleter')->setSearchFields(array('Title'));
+			$grid = new GridField("Advertisements", _t('Advertisement.PLURALNAME', 'Advertisements'), $this->owner->Advertisements(), $conf);
+			$fields->addFieldToTab("Root.Advertisements", $grid);
+			$fields->addFieldToTab('Root.Advertisements', new DropdownField('UseCampaignID', _t('Advertisement.UseCampaign', 'Use Campaign'), $this->getListboxOptions('AdCampaign')));
+		}
 	}
 
 	/** Displays a randomly chosen advertisement of the specified dimensions.
