@@ -26,6 +26,7 @@ en:
     PreviewTitle: 'Ad Preview:'
     InheritSettings: 'Inherit parent settings'
     UseCampaign: 'Use Campaign'
+    ClicksNotApplicable: 'Not Applicable (external advertisement)'
 
   AdZone:
     SINGULARNAME: 'Ad Zone'

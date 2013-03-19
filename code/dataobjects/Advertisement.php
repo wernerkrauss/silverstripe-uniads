@@ -82,6 +82,8 @@ class Advertisement extends DataObject {
 	function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 
+		$labels['Campaign.Title'] = _t('Advertisement.has_one_Campaign', 'Campaign');
+		$labels['Zone.Title'] = _t('Advertisement.has_one_Zone', 'Zone');
 		$labels['Clicks'] = _t('Advertisement.db_Clicks', 'Clicks');
 		$labels['Impressions'] = _t('Advertisement.db_Impressions', 'Impressions');
 
@@ -181,7 +183,7 @@ class Advertisement extends DataObject {
 		if (!$this->clicks) {
 			if($this->isExternalAd())
 			{
-				return 'Not Applicable (external advertisement)';
+				return _t('Advertisement.ClicksNotApplicable', 'Not Applicable (external advertisement)');
 			}
 
 			$query = new SQLQuery(array('Clicks' => 'count(*)'), 'AdImpression', "ClassName = 'AdClick' and AdID = ".$this->ID);

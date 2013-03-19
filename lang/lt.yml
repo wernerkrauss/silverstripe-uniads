@@ -26,6 +26,7 @@ lt:
     PreviewTitle: 'Peržiūra:'
     InheritSettings: 'Paveldėti nustatymus iš aukštesnio puslapio'
     UseCampaign: 'Naudoti kampaniją'
+    ClicksNotApplicable: 'Nėra (išorinis skydelis)'
 
   AdZone:
     SINGULARNAME: 'Skydelių zona'
