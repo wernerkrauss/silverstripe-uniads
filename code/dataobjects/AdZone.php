@@ -55,6 +55,14 @@ class AdZone extends DataObject {
 		return $this->ZoneHeight . (ctype_digit($this->ZoneHeight) ? 'px' : '');
 	}
 
+	function fieldLabels($includerelations = true) {
+		$labels = parent::fieldLabels($includerelations);
+
+		$labels['ParentZone.Title'] = _t('AdZone.has_one_ParentZone', 'Parent Zone');
+
+		return $labels;
+	}
+
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 
