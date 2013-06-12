@@ -10,30 +10,34 @@
 class AdController extends Controller {
 
 	public function clk() {
-		if ($this->request->requestVar('id')) {
-			$id = (int) $this->request->requestVar('id');
-			if ($id) {
-				$imp = new AdClick;
-				$imp->AdID = $id;
-				$imp->write();
-			}
-		}
+		$this->GetAdAndLogClick($this->request->requestVar('id'));
 	}
 
 	public function go() {
-		$id = (int) $this->request->param('ID');
+		$ad = $this->GetAdAndLogClick($this->request->param('ID'));
+		if ($ad) {
+			$this->redirect($ad->getTarget());
+		}
+	}
 
+	private function GetAdAndLogClick($id) {
+		$id = (int) $id;
 		if ($id) {
 			$ad = DataObject::get_by_id('Advertisement', $id);
 			if ($ad && $ad->exists()) {
-				$imp = new AdClick;
-				$imp->AdID = $id;
-				$imp->write();
-
-				$this->redirect($ad->getTarget());
-				return;
+				if (Advertisement::record_clicks()) {
+					$ad->Clicks++;
+					$ad->write();
+				}
+				if (Advertisement::record_clicks_stats()) {
+					$clk = new AdClick;
+					$clk->AdID = $ad->ID;
+					$clk->write();
+				}
+				return $ad;
 			}
 		}
+		return null;
 	}
 
 }

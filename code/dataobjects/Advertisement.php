@@ -12,6 +12,9 @@ class Advertisement extends DataObject {
 
 	public static $use_js_tracking = true;
 	public static $record_impressions = true;
+	public static $record_impressions_stats = false;
+	public static $record_clicks = true;
+	public static $record_clicks_stats = true;
 
 	public static $files_dir = 'Ads';
 	public static $max_file_size = 2097152;
@@ -26,6 +29,8 @@ class Advertisement extends DataObject {
 		'AdContent' => 'HTMLText',
 		'ImpressionLimit' => 'Int',
 		'Weight' => 'Double',
+		'Impressions' => 'Int',
+		'Clicks' => 'Int',
 	);
 
 	public static $has_one = array(
@@ -53,8 +58,8 @@ class Advertisement extends DataObject {
 		'Title',
 		'Campaign.Title',
 		'Zone.Title',
-		'Clicks',
 		'Impressions',
+		'Clicks',
 	);
 
 
@@ -64,6 +69,24 @@ class Advertisement extends DataObject {
 	}
 	public static function record_impressions() {
 		return self::$record_impressions;
+	}
+	public static function set_record_impressions_stats($record_impressions_stats) {
+		self::$record_impressions_stats = $record_impressions_stats;
+	}
+	public static function record_impressions_stats() {
+		return self::$record_impressions_stats;
+	}
+	public static function set_record_clicks($record_clicks) {
+		self::$record_clicks = $record_clicks;
+	}
+	public static function record_clicks() {
+		return self::$record_clicks;
+	}
+	public static function set_record_clicks_stats($record_clicks_stats) {
+		self::$record_clicks_stats = $record_clicks_stats;
+	}
+	public static function record_clicks_stats() {
+		return self::$record_clicks_stats;
 	}
 	public static function set_files_dir($files_dir) {
 		self::$files_dir = $files_dir;
@@ -79,13 +102,13 @@ class Advertisement extends DataObject {
 	}
 
 
-	function fieldLabels($includerelations = true) {
+	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 
 		$labels['Campaign.Title'] = _t('Advertisement.has_one_Campaign', 'Campaign');
 		$labels['Zone.Title'] = _t('Advertisement.has_one_Zone', 'Zone');
-		$labels['Clicks'] = _t('Advertisement.db_Clicks', 'Clicks');
 		$labels['Impressions'] = _t('Advertisement.db_Impressions', 'Impressions');
+		$labels['Clicks'] = _t('Advertisement.db_Clicks', 'Clicks');
 
 		return $labels;
 	}
@@ -98,12 +121,10 @@ class Advertisement extends DataObject {
 		)));
 
 		if ($this->ID) {
-			$impressions = $this->getImpressions();
-			$clicks = $this->getClicks();
 			$previewLink = Director::absoluteBaseURL() . 'admin/' . AdAdmin::$url_segment . '/Advertisement/preview/' . $this->ID;
 
-			$fields->addFieldToTab('Root.Main', new ReadonlyField('Impressions', _t('Advertisement.db_Impressions', 'Impressions'), $impressions), 'Title');
-			$fields->addFieldToTab('Root.Main', new ReadonlyField('Clicks', _t('Advertisement.db_Clicks', 'Clicks'), $clicks), 'Title');
+			$fields->addFieldToTab('Root.Main', new ReadonlyField('Impressions', _t('Advertisement.db_Impressions', 'Impressions')), 'Title');
+			$fields->addFieldToTab('Root.Main', new ReadonlyField('Clicks', _t('Advertisement.db_Clicks', 'Clicks')), 'Title');
 
 			$fields->addFieldsToTab('Root.Main', array(
 				DropdownField::create('CampaignID', _t('Advertisement.has_one_Campaign', 'Campaign'), DataList::create('AdCampaign')->map())->setEmptyString(_t('Advertisement.Campaign_none', 'none')),
@@ -118,7 +139,7 @@ class Advertisement extends DataObject {
 				$Expires = new DateField('Expires', _t('Advertisement.db_Expires', 'Expires')),
 				new NumericField('ImpressionLimit', _t('Advertisement.db_ImpressionLimit', 'Impression Limit')),
 				new CheckboxField('Active', _t('Advertisement.db_Active', 'Active')),
-				new LiteralField('Preview', "<a href=\"$previewLink\" target=\"_blank\">" . _t('Advertisement.Preview', 'Preview this advertisement') . "</a>"),
+				new LiteralField('Preview', '<a href="'.$previewLink.'" target="_blank">' . _t('Advertisement.Preview', 'Preview this advertisement') . "</a>"),
 			));
 
 			$file->setFolderName(self::files_dir());
@@ -158,46 +179,10 @@ class Advertisement extends DataObject {
 		return false;
 	}
 
-	 public function HaveLink() {
-	 	 return !$this->isExternalAd();
-	 }
-
-	protected $impressions;
-	public function getImpressions() {
-		if (!$this->impressions) {
-			$query = new SQLQuery(array('Impressions' => 'count(*)'), 'AdImpression', "ClassName = 'AdImpression' and AdID = ".$this->ID);
-			$res = $query->execute();
-			$obj = $res->first();
-
-			$this->impressions = 0;
-			if ($obj) {
-				$this->impressions = $obj['Impressions'];
-			}
-		}
-
-		return $this->impressions;
+	public function HaveLink() {
+		return !$this->isExternalAd();
 	}
 
-	protected $clicks;
-	public function getClicks() {
-		if (!$this->clicks) {
-			if($this->isExternalAd())
-			{
-				return _t('Advertisement.ClicksNotApplicable', 'Not Applicable (external advertisement)');
-			}
-
-			$query = new SQLQuery(array('Clicks' => 'count(*)'), 'AdImpression', "ClassName = 'AdClick' and AdID = ".$this->ID);
-			$res = $query->execute();
-			$obj = $res->first();
-
-			$this->clicks = 0;
-			if ($obj) {
-				$this->clicks = $obj['Clicks'];
-			}
-		}
-
-		return $this->clicks;
-	}
 
 	public function forTemplate() {
 		$template = new SSViewer('Advertisement');

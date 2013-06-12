@@ -102,7 +102,7 @@ class AdvertisementExtension extends DataExtension {
 					$select = 'a.ID',
 					$from = array($base_from),
 					$where = $base_where . "
-						and (a.ImpressionLimit = 0 or a.ImpressionLimit > (select count(i.ID) from AdImpression i where i.ClassName = 'AdImpression' and i.AdID = a.ID))
+						and (a.ImpressionLimit = 0 or a.ImpressionLimit > a.Impressions)
 						and a.Weight >= (rand() * (
 							select max(aa.Weight)
 							from Advertisement as aa
@@ -120,6 +120,10 @@ class AdvertisementExtension extends DataExtension {
 						$ad = DataObject::get_one('Advertisement', "ID = " . $row['ID']);
 						// now we can log impression
 						if (Advertisement::record_impressions()) {
+							$ad->Impressions++;
+							$ad->write();
+						}
+						if (Advertisement::record_impressions_stats()) {
 							$imp = new AdImpression;
 							$imp->AdID = $ad->ID;
 							$imp->write();
