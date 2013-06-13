@@ -1,0 +1,16 @@
+{
+	"name": "uniun/silverstripe-ads",
+	"type": "silverstripe-module",
+	"description": "A simple module to manage advertisements on pages for Silverstripe.",
+	"keywords": ["silverstripe", "ads", "advertisement"],
+	"authors": [{
+		"name": "Elvinas Liutkevičius",
+		"email": "elvinas@unisolutions.eu"
+	}],
+	"require": {
+		"php": ">=5.3.2",
+		"silverstripe/framework": "3.*",
+		"silverstripe/cms": "3.*"
+	},
+	"minimum-stability": "dev"
+}
