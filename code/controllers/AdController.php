@@ -23,13 +23,13 @@ class AdController extends Controller {
 	private function GetAdAndLogClick($id) {
 		$id = (int) $id;
 		if ($id) {
-			$ad = DataObject::get_by_id('Advertisement', $id);
+			$ad = DataObject::get_by_id('AdObject', $id);
 			if ($ad && $ad->exists()) {
-				if (Advertisement::record_clicks()) {
+				if (AdObject::record_clicks()) {
 					$ad->Clicks++;
 					$ad->write();
 				}
-				if (Advertisement::record_clicks_stats()) {
+				if (AdObject::record_clicks_stats()) {
 					$clk = new AdClick;
 					$clk->AdID = $ad->ID;
 					$clk->write();

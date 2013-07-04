@@ -28,7 +28,7 @@ class AdZone extends DataObject {
 	);
 
 	public static $has_many = array(
-		'Advertisements' => 'Advertisement',
+		'Ads' => 'AdObject',
 		'ChildZones' => 'AdZone',
 	);
 

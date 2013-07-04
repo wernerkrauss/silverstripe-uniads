@@ -23,7 +23,7 @@ class AdImpression extends DataObject {
 
 	public static $has_one = array(
 		'User' => 'Member',
-		'Ad' => 'Advertisement',
+		'Ad' => 'AdObject',
 	);
 
 	public function onBeforeWrite() {

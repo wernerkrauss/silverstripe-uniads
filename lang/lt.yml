@@ -2,7 +2,7 @@ lt:
   AdAdmin:
     MENUTITLE: 'Reklaminiai skydeliai'
 
-  Advertisement:
+  AdObject:
     SINGULARNAME: 'Reklaminis skydelis'
     PLURALNAME: 'Reklaminiai skydeliai'
     db_Title: 'Pavadinimas'

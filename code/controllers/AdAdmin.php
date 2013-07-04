@@ -9,7 +9,7 @@
  */
 class AdAdmin extends ModelAdmin {
 	public static $managed_models = array(
-		'Advertisement',
+		'AdObject',
 		'AdCampaign',
 		'AdClient',
 		'AdZone',
@@ -21,33 +21,32 @@ class AdAdmin extends ModelAdmin {
 
 	static $url_rule = '/$ModelClass/$Action/$ID/$OtherID';
 
-	public static $url_segment = 'advertisements';
+	public static $url_segment = 'advrt';
 	public static $menu_title = 'Ads';
 	public static $menu_icon = '';
 
 
 	public function __construct() {
-		self::$menu_icon = ADS_MODULE_DIR . '/images/ads-icon.png';
+		self::$menu_icon = ADS_MODULE_DIR . '/images/icon-advrt.png';
 		parent::__construct();
 	}
 
 	/** Preview an advertisement.
 	 */
-	public function preview(SS_HTTPRequest $request)
-	{
+	public function preview(SS_HTTPRequest $request) {
 		$request->shift();
 		$adID = (int) $request->param('ID');
-		$ad = DataObject::get_by_id('Advertisement', $adID);
+		$ad = DataObject::get_by_id('AdObject', $adID);
 
-		if(!$ad)
-		{
+		if (!$ad) {
 			Controller::curr()->httpError(404);
 			return;
 		}
 
 		// No impression and click tracking for previews
-		Advertisement::$use_js_tracking = false;
-		Advertisement::$record_impressions = false;
+		AdObject::use_js_tracking(false);
+		AdObject::set_record_impressions(false);
+		AdObject::set_record_impressions_stats(false);
 
 		// Block stylesheets and JS that are not required (using our own template)
 		Requirements::clear();

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Description of Advertisement
+ * Description of AdObject (ddvertisement object)
  *
  * @author Elvinas Liutkevičius <elvinas@unisolutions.eu>
  * @author Hans de Ruiter <hans@hdrlab.org.nz>
  * @author Marcus Nyeholt <marcus@silverstripe.com.au>
  * @license BSD http://silverstripe.org/BSD-license
  */
-class Advertisement extends DataObject {
+class AdObject extends DataObject {
 
 	public static $use_js_tracking = true;
 	public static $record_impressions = true;
@@ -16,7 +16,7 @@ class Advertisement extends DataObject {
 	public static $record_clicks = true;
 	public static $record_clicks_stats = true;
 
-	public static $files_dir = 'Ads';
+	public static $files_dir = 'UploadedAds';
 	public static $max_file_size = 2097152;
 
 	public static $db = array(
@@ -64,6 +64,12 @@ class Advertisement extends DataObject {
 
 
 	// for configuration
+	public static function set_use_js_tracking($use_js_tracking) {
+		self::$use_js_tracking = $use_js_tracking;
+	}
+	public static function use_js_tracking() {
+		return self::$use_js_tracking;
+	}
 	public static function set_record_impressions($record_impressions) {
 		self::$record_impressions = $record_impressions;
 	}
@@ -105,10 +111,10 @@ class Advertisement extends DataObject {
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 
-		$labels['Campaign.Title'] = _t('Advertisement.has_one_Campaign', 'Campaign');
-		$labels['Zone.Title'] = _t('Advertisement.has_one_Zone', 'Zone');
-		$labels['Impressions'] = _t('Advertisement.db_Impressions', 'Impressions');
-		$labels['Clicks'] = _t('Advertisement.db_Clicks', 'Clicks');
+		$labels['Campaign.Title'] = _t('AdObject.has_one_Campaign', 'Campaign');
+		$labels['Zone.Title'] = _t('AdObject.has_one_Zone', 'Zone');
+		$labels['Impressions'] = _t('AdObject.db_Impressions', 'Impressions');
+		$labels['Clicks'] = _t('AdObject.db_Clicks', 'Clicks');
 
 		return $labels;
 	}
@@ -117,29 +123,29 @@ class Advertisement extends DataObject {
 	public function getCMSFields() {
 		$fields = new FieldList();
 		$fields->push(new TabSet('Root', new Tab('Main', _t('SiteTree.TABMAIN', 'Main')
-			, new TextField('Title', _t('Advertisement.db_Title', 'Title'))
+			, new TextField('Title', _t('AdObject.db_Title', 'Title'))
 		)));
 
 		if ($this->ID) {
-			$previewLink = Director::absoluteBaseURL() . 'admin/' . AdAdmin::$url_segment . '/Advertisement/preview/' . $this->ID;
+			$previewLink = Director::absoluteBaseURL() . 'admin/' . AdAdmin::$url_segment . '/AdObject/preview/' . $this->ID;
 
-			$fields->addFieldToTab('Root.Main', new ReadonlyField('Impressions', _t('Advertisement.db_Impressions', 'Impressions')), 'Title');
-			$fields->addFieldToTab('Root.Main', new ReadonlyField('Clicks', _t('Advertisement.db_Clicks', 'Clicks')), 'Title');
+			$fields->addFieldToTab('Root.Main', new ReadonlyField('Impressions', _t('AdObject.db_Impressions', 'Impressions')), 'Title');
+			$fields->addFieldToTab('Root.Main', new ReadonlyField('Clicks', _t('AdObject.db_Clicks', 'Clicks')), 'Title');
 
 			$fields->addFieldsToTab('Root.Main', array(
-				DropdownField::create('CampaignID', _t('Advertisement.has_one_Campaign', 'Campaign'), DataList::create('AdCampaign')->map())->setEmptyString(_t('Advertisement.Campaign_none', 'none')),
-				DropdownField::create('ZoneID', _t('Advertisement.has_one_Zone', 'Zone'), DataList::create('AdZone')->map())->setEmptyString(_t('Advertisement.Zone_select', 'select one')),
-				new NumericField('Weight', _t('Advertisement.db_Weight', 'Weight (controls how often it will be shown relative to others)')),
-				new TextField('TargetURL', _t('Advertisement.db_TargetURL', 'Target URL')),
-				new Treedropdownfield('InternalPageID', _t('Advertisement.has_one_InternalPage', 'Internal Page Link'), 'Page'),
-				new CheckboxField('NewWindow', _t('Advertisement.db_NewWindow', 'Open in a new Window')),
-				$file = new UploadField('File', _t('Advertisement.has_one_File', 'Advertisement File')),
-				$AdContent = new TextareaField('AdContent', _t('Advertisement.db_AdContent', 'Advertisement Content')),
-				$Starts = new DateField('Starts', _t('Advertisement.db_Starts', 'Starts')),
-				$Expires = new DateField('Expires', _t('Advertisement.db_Expires', 'Expires')),
-				new NumericField('ImpressionLimit', _t('Advertisement.db_ImpressionLimit', 'Impression Limit')),
-				new CheckboxField('Active', _t('Advertisement.db_Active', 'Active')),
-				new LiteralField('Preview', '<a href="'.$previewLink.'" target="_blank">' . _t('Advertisement.Preview', 'Preview this advertisement') . "</a>"),
+				DropdownField::create('CampaignID', _t('AdObject.has_one_Campaign', 'Campaign'), DataList::create('AdCampaign')->map())->setEmptyString(_t('AdObject.Campaign_none', 'none')),
+				DropdownField::create('ZoneID', _t('AdObject.has_one_Zone', 'Zone'), DataList::create('AdZone')->map())->setEmptyString(_t('AdObject.Zone_select', 'select one')),
+				new NumericField('Weight', _t('AdObject.db_Weight', 'Weight (controls how often it will be shown relative to others)')),
+				new TextField('TargetURL', _t('AdObject.db_TargetURL', 'Target URL')),
+				new Treedropdownfield('InternalPageID', _t('AdObject.has_one_InternalPage', 'Internal Page Link'), 'Page'),
+				new CheckboxField('NewWindow', _t('AdObject.db_NewWindow', 'Open in a new Window')),
+				$file = new UploadField('File', _t('AdObject.has_one_File', 'Advertisement File')),
+				$AdContent = new TextareaField('AdContent', _t('AdObject.db_AdContent', 'Advertisement Content')),
+				$Starts = new DateField('Starts', _t('AdObject.db_Starts', 'Starts')),
+				$Expires = new DateField('Expires', _t('AdObject.db_Expires', 'Expires')),
+				new NumericField('ImpressionLimit', _t('AdObject.db_ImpressionLimit', 'Impression Limit')),
+				new CheckboxField('Active', _t('AdObject.db_Active', 'Active')),
+				new LiteralField('Preview', '<a href="'.$previewLink.'" target="_blank">' . _t('AdObject.Preview', 'Preview this advertisement') . "</a>"),
 			));
 
 			$file->setFolderName(self::files_dir());
@@ -185,23 +191,18 @@ class Advertisement extends DataObject {
 
 
 	public function forTemplate() {
-		$template = new SSViewer('Advertisement');
+		$template = new SSViewer('AdObject');
 		return $template->process($this);
 	}
 
-	public function UseJSTracking() {
-		return self::$use_js_tracking;
-	}
-
 	public function Link() {
-		if (self::$use_js_tracking) {
-			Requirements::javascript(THIRDPARTY_DIR.'/jquery/jquery-packed.js');
-			Requirements::javascript(THIRDPARTY_DIR.'/jquery-livequery/jquery.livequery.js');
-			Requirements::javascript(ADS_MODULE_DIR.'/javascript/advertisements.js');
+		if (self::use_js_tracking()) {
+			Requirements::javascript(THIRDPARTY_DIR.'/jquery/jquery.js'); // TODO: How about jquery.min.js?
+			Requirements::javascript(ADS_MODULE_DIR.'/javascript/uniads.js');
 
 			$link = Convert::raw2att($this->getTarget());
 		} else {
-			$link = Controller::join_links(Director::baseURL(), 'adclick/go/'.$this->ID);
+			$link = Controller::join_links(Director::baseURL(), 'advrt-click/go/'.$this->ID);
 		}
 		return $link;
 	}

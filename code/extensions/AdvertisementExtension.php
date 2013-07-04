@@ -17,7 +17,7 @@ class AdvertisementExtension extends DataExtension {
 		'InheritSettings' => true
 	);
 	public static $many_many = array(
-		'Advertisements' => 'Advertisement',
+		'Ads' => 'AdObject',
 	);
 	public static $has_one = array(
 		'UseCampaign' => 'AdCampaign',
@@ -31,15 +31,15 @@ class AdvertisementExtension extends DataExtension {
 	public function updateCMSFields(FieldList $fields) {
 		parent::updateCMSFields($fields);
 
-		$fields->findOrMakeTab('Root.Advertisements', _t('Advertisement.PLURALNAME', 'Advertisements'));
-		$fields->addFieldToTab('Root.Advertisements', new CheckboxField('InheritSettings', _t('Advertisement.InheritSettings', 'Inherit parent settings')));
+		$fields->findOrMakeTab('Root.Advertisements', _t('AdObject.PLURALNAME', 'Advertisements'));
+		$fields->addFieldToTab('Root.Advertisements', new CheckboxField('InheritSettings', _t('AdObject.InheritSettings', 'Inherit parent settings')));
 
 		if (!$this->owner->InheritSettings) {
 			$conf = GridFieldConfig_RelationEditor::create();
 			$conf->getComponentByType('GridFieldAddExistingAutocompleter')->setSearchFields(array('Title'));
-			$grid = new GridField("Advertisements", _t('Advertisement.PLURALNAME', 'Advertisements'), $this->owner->Advertisements(), $conf);
+			$grid = new GridField("Advertisements", _t('AdObject.PLURALNAME', 'Advertisements'), $this->owner->Ads(), $conf);
 			$fields->addFieldToTab("Root.Advertisements", $grid);
-			$fields->addFieldToTab('Root.Advertisements', new DropdownField('UseCampaignID', _t('Advertisement.UseCampaign', 'Use Campaign'), $this->getListboxOptions('AdCampaign')));
+			$fields->addFieldToTab('Root.Advertisements', new DropdownField('UseCampaignID', _t('AdObject.UseCampaign', 'Use Campaign'), $this->getListboxOptions('AdCampaign')));
 		}
 	}
 
@@ -68,12 +68,12 @@ class AdvertisementExtension extends DataExtension {
 					}
 				}
 
-				$page_related = "and not exists (select * from Page_Advertisements pa where pa.AdvertisementID = a.ID)";
+				$page_related = "and not exists (select * from Page_Ads pa where pa.AdObjectID = a.ID)";
 				$campaign = '';
 				if ($toUse) {
 					$page_related = "and (
-						exists (select * from Page_Advertisements pa where pa.AdvertisementID = a.ID and pa.PageID = ".$toUse->ID.")
-						or not exists (select * from Page_Advertisements pa where pa.AdvertisementID = a.ID)
+						exists (select * from Page_Ads pa where pa.AdObjectID = a.ID and pa.PageID = ".$toUse->ID.")
+						or not exists (select * from Page_Ads pa where pa.AdObjectID = a.ID)
 					)";
 					if ($toUse->UseCampaignID) {
 						$campaign = "and c.ID = '" . $toUse->UseCampaignID . "'";
@@ -81,7 +81,7 @@ class AdvertisementExtension extends DataExtension {
 				}
 
 				$base_from = "
-					Advertisement as a
+					AdObject as a
 						left join AdCampaign c on c.ID = a.CampaignID
 				";
 				$base_where = "
@@ -105,7 +105,7 @@ class AdvertisementExtension extends DataExtension {
 						and (a.ImpressionLimit = 0 or a.ImpressionLimit > a.Impressions)
 						and a.Weight >= (rand() * (
 							select max(aa.Weight)
-							from Advertisement as aa
+							from AdObject as aa
 								left join AdCampaign cc on cc.ID = aa.CampaignID
 							where ".preg_replace('/(?<!\w)(a|c)\./e', 'str_repeat("$1", 2)."."', $base_where)."
 						))",
@@ -117,13 +117,13 @@ class AdvertisementExtension extends DataExtension {
 				if($result && count($result) > 0) {
 					$row = $result->First();
 					if (isset($row['ID']) && $row['ID'] !== '') {
-						$ad = DataObject::get_one('Advertisement', "ID = " . $row['ID']);
+						$ad = DataObject::get_one('AdObject', "ID = " . $row['ID']);
 						// now we can log impression
-						if (Advertisement::record_impressions()) {
+						if (AdObject::record_impressions()) {
 							$ad->Impressions++;
 							$ad->write();
 						}
-						if (Advertisement::record_impressions_stats()) {
+						if (AdObject::record_impressions_stats()) {
 							$imp = new AdImpression;
 							$imp->AdID = $ad->ID;
 							$imp->write();
@@ -135,7 +135,7 @@ class AdvertisementExtension extends DataExtension {
 
 		if (!$ad) {
 			// Show an empty advert
-			$ad = new Advertisement();
+			$ad = new AdObject();
 		}
 
 		$output = $ad->forTemplate();

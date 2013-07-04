@@ -1,0 +1,7 @@
+---
+Name: uniads
+After: framework/routes#coreroutes
+---
+Director:
+  rules:
+    'advrt-click//$Action/$ID' : 'AdController'

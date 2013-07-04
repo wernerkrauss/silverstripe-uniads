@@ -23,7 +23,7 @@ class AdCampaign extends DataObject {
 	);
 
 	public static $has_many = array(
-		'Advertisements' => 'Advertisement',
+		'Ads' => 'AdObject',
 	);
 
 	public static $has_one = array(

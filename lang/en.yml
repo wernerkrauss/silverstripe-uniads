@@ -2,7 +2,7 @@ en:
   AdAdmin:
     MENUTITLE: 'Ads'
 
-  Advertisement:
+  AdObject:
     SINGULARNAME: 'Advertisement'
     PLURALNAME: 'Advertisements'
     db_Title: 'Title'

@@ -1,8 +1,8 @@
 {
-	"name": "uniun/silverstripe-ads",
+	"name": "uniun/silverstripe-uniads",
 	"type": "silverstripe-module",
 	"description": "A simple module to manage advertisements on pages for Silverstripe.",
-	"keywords": ["silverstripe", "ads", "advertisement"],
+	"keywords": ["silverstripe", "ads", "advertisement", "banner", "banners", "admanager", "manager", "management"],
 	"authors": [{
 		"name": "Elvinas Liutkevičius",
 		"email": "elvinas@unisolutions.eu"
