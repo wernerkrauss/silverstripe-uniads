@@ -119,11 +119,12 @@ class AdvertisementExtension extends DataExtension {
 					if (isset($row['ID']) && $row['ID'] !== '') {
 						$ad = DataObject::get_one('AdObject', "ID = " . $row['ID']);
 						// now we can log impression
-						if (AdObject::record_impressions()) {
+						$conf = AdObject::config();
+						if ($conf->record_impressions) {
 							$ad->Impressions++;
 							$ad->write();
 						}
-						if (AdObject::record_impressions_stats()) {
+						if ($conf->record_impressions_stats) {
 							$imp = new AdImpression;
 							$imp->AdID = $ad->ID;
 							$imp->write();

@@ -25,11 +25,12 @@ class AdController extends Controller {
 		if ($id) {
 			$ad = DataObject::get_by_id('AdObject', $id);
 			if ($ad && $ad->exists()) {
-				if (AdObject::record_clicks()) {
+				$conf = AdObject::config();
+				if ($conf->record_clicks) {
 					$ad->Clicks++;
 					$ad->write();
 				}
-				if (AdObject::record_clicks_stats()) {
+				if ($conf->record_clicks_stats) {
 					$clk = new AdClick;
 					$clk->AdID = $ad->ID;
 					$clk->write();

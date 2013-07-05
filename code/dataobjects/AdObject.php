@@ -10,14 +10,14 @@
  */
 class AdObject extends DataObject {
 
-	public static $use_js_tracking = true;
-	public static $record_impressions = true;
-	public static $record_impressions_stats = false;
-	public static $record_clicks = true;
-	public static $record_clicks_stats = true;
+	private static $use_js_tracking = true;
+	private static $record_impressions = true;
+	private static $record_impressions_stats = false;
+	private static $record_clicks = true;
+	private static $record_clicks_stats = true;
 
-	public static $files_dir = 'UploadedAds';
-	public static $max_file_size = 2097152;
+	private static $files_dir = 'UploadedAds';
+	private static $max_file_size = 2097152;
 
 	public static $db = array(
 		'Title' => 'Varchar',
@@ -63,51 +63,6 @@ class AdObject extends DataObject {
 	);
 
 
-	// for configuration
-	public static function set_use_js_tracking($use_js_tracking) {
-		self::$use_js_tracking = $use_js_tracking;
-	}
-	public static function use_js_tracking() {
-		return self::$use_js_tracking;
-	}
-	public static function set_record_impressions($record_impressions) {
-		self::$record_impressions = $record_impressions;
-	}
-	public static function record_impressions() {
-		return self::$record_impressions;
-	}
-	public static function set_record_impressions_stats($record_impressions_stats) {
-		self::$record_impressions_stats = $record_impressions_stats;
-	}
-	public static function record_impressions_stats() {
-		return self::$record_impressions_stats;
-	}
-	public static function set_record_clicks($record_clicks) {
-		self::$record_clicks = $record_clicks;
-	}
-	public static function record_clicks() {
-		return self::$record_clicks;
-	}
-	public static function set_record_clicks_stats($record_clicks_stats) {
-		self::$record_clicks_stats = $record_clicks_stats;
-	}
-	public static function record_clicks_stats() {
-		return self::$record_clicks_stats;
-	}
-	public static function set_files_dir($files_dir) {
-		self::$files_dir = $files_dir;
-	}
-	public static function files_dir() {
-		return self::$files_dir;
-	}
-	public static function set_max_file_size($max_file_size) {
-		self::$max_file_size = $max_file_size;
-	}
-	public static function max_file_size() {
-		return self::$max_file_size;
-	}
-
-
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 
@@ -148,8 +103,8 @@ class AdObject extends DataObject {
 				new LiteralField('Preview', '<a href="'.$previewLink.'" target="_blank">' . _t('AdObject.Preview', 'Preview this advertisement') . "</a>"),
 			));
 
-			$file->setFolderName(self::files_dir());
-			$file->getValidator()->setAllowedMaxFileSize(array('*' => self::max_file_size()));
+			$file->setFolderName($this->config()->files_dir);
+			$file->getValidator()->setAllowedMaxFileSize(array('*' => $this->config()->max_file_size));
 			$file->getValidator()->setAllowedExtensions(array_merge(File::$app_categories['image'], File::$app_categories['flash']));
 
 			$AdContent->setRows(10);
@@ -172,7 +127,7 @@ class AdObject extends DataObject {
 	/** Returns true if this is an "external" advertisment (e.g., one from Google AdSense).
 	 * "External" advertisements have no target URL or page.
 	 */
-	protected function isExternalAd() {
+	public function ExternalAd() {
 		if (!$this->InternalPageID && empty($this->TargetURL)) {
 			return true;
 		}
@@ -185,18 +140,13 @@ class AdObject extends DataObject {
 		return false;
 	}
 
-	public function HaveLink() {
-		return !$this->isExternalAd();
-	}
-
-
 	public function forTemplate() {
 		$template = new SSViewer('AdObject');
 		return $template->process($this);
 	}
 
 	public function Link() {
-		if (self::use_js_tracking()) {
+		if ($this->config()->use_js_tracking) {
 			Requirements::javascript(THIRDPARTY_DIR.'/jquery/jquery.js'); // TODO: How about jquery.min.js?
 			Requirements::javascript(ADS_MODULE_DIR.'/javascript/uniads.js');
 

@@ -44,9 +44,10 @@ class AdAdmin extends ModelAdmin {
 		}
 
 		// No impression and click tracking for previews
-		AdObject::use_js_tracking(false);
-		AdObject::set_record_impressions(false);
-		AdObject::set_record_impressions_stats(false);
+		$conf = AdObject::config();
+		$conf->use_js_tracking = false;
+		$conf->record_impressions = false;
+		$conf->record_impressions_stats = false;
 
 		// Block stylesheets and JS that are not required (using our own template)
 		Requirements::clear();
