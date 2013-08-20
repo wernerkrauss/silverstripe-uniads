@@ -102,10 +102,11 @@ class AdObject extends DataObject {
 				new CheckboxField('Active', _t('AdObject.db_Active', 'Active')),
 				new LiteralField('Preview', '<a href="'.$previewLink.'" target="_blank">' . _t('AdObject.Preview', 'Preview this advertisement') . "</a>"),
 			));
-
+			
+			$app_categories = File::config()->app_categories;
 			$file->setFolderName($this->config()->files_dir);
 			$file->getValidator()->setAllowedMaxFileSize(array('*' => $this->config()->max_file_size));
-			$file->getValidator()->setAllowedExtensions(array_merge(File::$app_categories['image'], File::$app_categories['flash']));
+			$file->getValidator()->setAllowedExtensions(array_merge($app_categories['image'], $app_categories['flash']));
 
 			$AdContent->setRows(10);
 			$AdContent->setColumns(20);
