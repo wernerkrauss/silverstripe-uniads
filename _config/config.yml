@@ -1,0 +1,9 @@
+---
+Name: uniads
+After: 'framework/*','cms/*'
+---
+
+Page:
+  extensions:
+    - AdvertisementExtension
+
