@@ -11,7 +11,7 @@ class AdAdmin extends ModelAdmin {
 	private static $managed_models = array(
 		'AdObject',
 		'AdCampaign',
-		'AdClient',
+		'AdCustomer',
 		'AdZone',
 	);
 

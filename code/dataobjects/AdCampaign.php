@@ -27,7 +27,7 @@ class AdCampaign extends DataObject {
 	);
 
 	private static $has_one = array(
-		'Client' => 'AdClient',
+		'Client' => 'AdCustomer',
 	);
 
 	public function getCMSFields() {

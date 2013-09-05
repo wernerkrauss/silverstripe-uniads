@@ -49,7 +49,7 @@ de:
     db_Active: 'Aktiv'
     has_one_Client: 'Klient'
 
-  AdClient:
+  AdCustomer:
     SINGULARNAME: 'Kunde'
     PLURALNAME: 'Kunden'
     db_Title: 'Titel'
