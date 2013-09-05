@@ -9,7 +9,7 @@ de:
     db_Starts: 'Start'
     db_Expires: 'Ende'
     db_Active: 'Aktiv'
-    db_TargetURL: 'Zile URL'
+    db_TargetURL: 'Ziel URL'
     db_NewWindow: 'In neuem Fenster öffnen'
     db_AdContent: 'Inhalt'
     db_ImpressionLimit: 'Maximale Impressionen'
