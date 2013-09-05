@@ -8,12 +8,24 @@
  * @license BSD http://silverstripe.org/BSD-license
  */
 class AdClient extends DataObject {
-	public static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar(128)',
-		'ContactEmail' => 'Text',
+		'ContactEmail' => 'Text'
 	);
-	public static $summary_fields = array(
+
+	private static $has_many = array(
+		'Campaigns' => 'AdCampaign'
+	);
+
+	private static $summary_fields = array(
 		'Title',
-		'ContactEmail',
+		'ContactEmail'
 	);
+
+	public function getCMSFields(){
+		$fields = parent::getCMSFields();
+
+		$fields->push(HiddenField::create('foo'));
+		return $fields;
+	}
 }

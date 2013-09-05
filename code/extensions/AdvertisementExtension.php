@@ -10,16 +10,16 @@
  */
 class AdvertisementExtension extends DataExtension {
 
-	public static $db = array(
+	private static $db = array(
 		'InheritSettings' => 'Boolean',
 	);
-	public static $defaults = array(
+	private static $defaults = array(
 		'InheritSettings' => true
 	);
-	public static $many_many = array(
+	private static $many_many = array(
 		'Ads' => 'AdObject',
 	);
-	public static $has_one = array(
+	private static $has_one = array(
 		'UseCampaign' => 'AdCampaign',
 	);
 

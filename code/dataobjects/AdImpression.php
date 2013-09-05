@@ -8,7 +8,7 @@
  * @license BSD http://silverstripe.org/BSD-license
  */
 class AdImpression extends DataObject {
-	public static $db = array(
+	private static $db = array(
 		'UserAgent' => 'Varchar(128)',
 		'BrowserVersion' => 'Varchar',
 		'Browser' => 'Varchar',
@@ -21,7 +21,7 @@ class AdImpression extends DataObject {
 		'RemoteIP' => 'Varchar',
 	);
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'User' => 'Member',
 		'Ad' => 'AdObject',
 	);

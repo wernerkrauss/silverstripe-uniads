@@ -9,6 +9,11 @@
  */
 class AdController extends Controller {
 
+	private static $allowed_actions = array(
+		'clk',
+		'go'
+	);
+
 	public function clk() {
 		$this->GetAdAndLogClick($this->request->requestVar('id'));
 	}

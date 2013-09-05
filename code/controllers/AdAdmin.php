@@ -8,22 +8,22 @@
  * @license BSD http://silverstripe.org/BSD-license
  */
 class AdAdmin extends ModelAdmin {
-	public static $managed_models = array(
+	private static $managed_models = array(
 		'AdObject',
 		'AdCampaign',
 		'AdClient',
 		'AdZone',
 	);
 
-	static $allowed_actions = array(
+	private  $allowed_actions = array(
 		'preview'
 	);
 
-	static $url_rule = '/$ModelClass/$Action/$ID/$OtherID';
+	private static  $url_rule = '/$ModelClass/$Action/$ID/$OtherID';
 
-	public static $url_segment = 'advrt';
-	public static $menu_title = 'Ads';
-	public static $menu_icon = '';
+	private static $url_segment = 'advrt';
+	private static $menu_title = 'Ads';
+	private static $menu_icon = '';
 
 
 	public function __construct() {
@@ -57,3 +57,4 @@ class AdAdmin extends ModelAdmin {
 		return $template->Process($ad);
 	}
 }
+

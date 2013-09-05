@@ -8,7 +8,7 @@
  */
 
 class AdZone extends DataObject {
-	public static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar',
 		'ZoneWidth' => 'Varchar(6)',
 		'ZoneHeight' => 'Varchar(6)',
@@ -16,36 +16,36 @@ class AdZone extends DataObject {
 		'Active' => 'Boolean',
 	);
 
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		'Title',
 		'ParentZone.Title',
 		'Order',
 		'Active',
 	);
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'ParentZone' => 'AdZone',
 	);
 
-	public static $has_many = array(
+	private static $has_many = array(
 		'Ads' => 'AdObject',
 		'ChildZones' => 'AdZone',
 	);
 
-	public static $indexes = array(
+	private static $indexes = array(
 		'Title' => true,
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		'Active' => 1,
 	);
 
-	public static $default_records = array(
+	private static $default_records = array(
 		array('Title' => 'Top', 'ZoneWidth' => '500', 'ZoneHeight' => '90'),
 		array('Title' => 'Right', 'ZoneWidth' => '160', 'ZoneHeight' => '600'),
 	);
 
-	public static $default_sort = 'ParentZoneID asc, Order asc, ID asc';
+	private static $default_sort = 'ParentZoneID asc, Order asc, ID asc';
 
 	public function getWidth(){
 		return $this->ZoneWidth . (ctype_digit($this->ZoneWidth) ? 'px' : '');
