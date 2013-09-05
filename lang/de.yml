@@ -1,0 +1,56 @@
+de:
+  AdAdmin:
+    MENUTITLE: 'Anzeigen'
+
+  AdObject:
+    SINGULARNAME: 'Werbeanzeige'
+    PLURALNAME: 'Werbeanzeigen'
+    db_Title: 'Titel'
+    db_Starts: 'Start'
+    db_Expires: 'Ende'
+    db_Active: 'Aktiv'
+    db_TargetURL: 'Zile URL'
+    db_NewWindow: 'In neuem Fenster öffnen'
+    db_AdContent: 'Inhalt'
+    db_ImpressionLimit: 'Maximale Impressionen'
+    db_Weight: 'Gewicht (Wie oft wird diese Anzeige relativ zu anderen Anzeigen geschaltet?)'
+    db_Impressions: 'Impressionen'
+    db_Clicks: 'Klicks'
+    has_one_File: 'Datei'
+    has_one_Zone: 'Zone'
+    has_one_Campaign: 'Kampagne'
+    has_one_InternalPage: 'Interner Seitenverweis'
+    Campaign_none: 'keine'
+    Zone_select: 'bitte auswählen'
+    Preview: 'Vorschau dieser Anzeige'
+    PreviewTitle: 'Anzeige Vorschau:'
+    InheritSettings: 'Von übergeordnetem Element übernehmen'
+    UseCampaign: 'Kampagne zuweisen'
+    ClicksNotApplicable: 'Nicht verwendbar (externe Anzeige)'
+
+  AdZone:
+    SINGULARNAME: 'Anzeigen Zone'
+    PLURALNAME: 'Anzeigen Zonen'
+    db_Title: 'Titel'
+    db_ZoneWidth: 'Zonenbreite'
+    db_ZoneHeight: 'Zonenhöhe'
+    db_Order: 'Reihenfolge'
+    db_Active: 'Aktiv'
+    has_one_ParentZone: 'Übergeordnete Zone'
+    has_many_Advertisements: 'Anzeigen'
+    has_many_ChildZones: 'Untergeordnete Zonen'
+
+  AdCampaign:
+    SINGULARNAME: 'Kampagne'
+    PLURALNAME: 'Kampagnen'
+    db_Title: 'Titel'
+    db_Starts: 'Start'
+    db_Expires: 'Ende'
+    db_Active: 'Aktiv'
+    has_one_Client: 'Klient'
+
+  AdClient:
+    SINGULARNAME: 'Kunde'
+    PLURALNAME: 'Kunden'
+    db_Title: 'Titel'
+    db_ContactEmail: 'Kontakt Email'
