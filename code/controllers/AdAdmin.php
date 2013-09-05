@@ -15,7 +15,7 @@ class AdAdmin extends ModelAdmin {
 		'AdZone',
 	);
 
-	private  $allowed_actions = array(
+	private static $allowed_actions = array(
 		'preview'
 	);
 
