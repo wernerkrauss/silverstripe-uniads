@@ -97,6 +97,11 @@ class AdvertisementExtension extends DataExtension {
 					and (a.Expires >= '" . date('Y-m-d') . "' or a.Expires = '' or a.Expires is null)
 					and a.Active = '1'
 				";
+				$subbase_where = preg_replace_callback(
+					'/(?<!\w)(a|c)\./'
+					, function ($m) { return str_repeat($m[1], 2).'.'; }
+					, $base_where
+				);
 
 				$sqlQuery = new SQLQuery(
 					$select = 'a.ID',
@@ -107,7 +112,7 @@ class AdvertisementExtension extends DataExtension {
 							select max(aa.Weight)
 							from AdObject as aa
 								left join AdCampaign cc on cc.ID = aa.CampaignID
-							where ".preg_replace('/(?<!\w)(a|c)\./e', 'str_repeat("$1", 2)."."', $base_where)."
+							where " . $subbase_where . "
 						))",
 					$order = "rand()",
 					$limit = 1
