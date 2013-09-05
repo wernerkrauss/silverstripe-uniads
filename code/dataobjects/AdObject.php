@@ -82,7 +82,7 @@ class AdObject extends DataObject {
 		)));
 
 		if ($this->ID) {
-			$previewLink = Director::absoluteBaseURL() . 'admin/' . AdAdmin::$url_segment . '/AdObject/preview/' . $this->ID;
+			$previewLink = Director::absoluteBaseURL() . 'admin/' . AdAdmin::config()->url_segment . '/AdObject/preview/' . $this->ID;
 
 			$fields->addFieldToTab('Root.Main', new ReadonlyField('Impressions', _t('AdObject.db_Impressions', 'Impressions')), 'Title');
 			$fields->addFieldToTab('Root.Main', new ReadonlyField('Clicks', _t('AdObject.db_Clicks', 'Clicks')), 'Title');
