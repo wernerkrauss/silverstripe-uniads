@@ -68,12 +68,12 @@ class AdvertisementExtension extends DataExtension {
 					}
 				}
 
-				$page_related = "and not exists (select * from Page_Ads pa where pa.AdObjectID = a.ID)";
+				$page_related = "and not exists (select * from Page_Ads pa where pa.AdObjectID = AdObject.ID)";
 				$campaign = '';
 				if ($toUse) {
 					$page_related = "and (
-						exists (select * from Page_Ads pa where pa.AdObjectID = a.ID and pa.PageID = ".$toUse->ID.")
-						or not exists (select * from Page_Ads pa where pa.AdObjectID = a.ID)
+						exists (select * from Page_Ads pa where pa.AdObjectID = AdObject.ID and pa.PageID = ".$toUse->ID.")
+						or not exists (select * from Page_Ads pa where pa.AdObjectID = AdObject.ID)
 					)";
 					if ($toUse->UseCampaignID) {
 						$campaign = "and c.ID = '" . $toUse->UseCampaignID . "'";
@@ -81,11 +81,11 @@ class AdvertisementExtension extends DataExtension {
 				}
 
 				$base_from = "
-					AdObject as a
-						left join AdCampaign c on c.ID = a.CampaignID
+					AdObject
+						left join AdCampaign c on c.ID = AdObject.CampaignID
 				";
 				$base_where = "
-					a.ZoneID = '" . $zone->ID . "'
+					AdObject.ZoneID = '" . $zone->ID . "'
 					".$page_related."
 					and (c.ID is null or (
 						c.Active = '1'
@@ -93,30 +93,31 @@ class AdvertisementExtension extends DataExtension {
 						and (c.Expires >= '" . date('Y-m-d') . "' or c.Expires = '' or c.Expires is null)
 						".$campaign."
 					))
-					and (a.Starts <= '" . date('Y-m-d') . "' or a.Starts = '' or a.Starts is null)
-					and (a.Expires >= '" . date('Y-m-d') . "' or a.Expires = '' or a.Expires is null)
-					and a.Active = '1'
+					and (AdObject.Starts <= '" . date('Y-m-d') . "' or AdObject.Starts = '' or AdObject.Starts is null)
+					and (AdObject.Expires >= '" . date('Y-m-d') . "' or AdObject.Expires = '' or AdObject.Expires is null)
+					and AdObject.Active = '1'
 				";
 				$subbase_where = preg_replace_callback(
-					'/(?<!\w)(a|c)\./'
+					'/(?<!\w)(AdObject|c)\./'
 					, function ($m) { return str_repeat($m[1], 2).'.'; }
 					, $base_where
 				);
 
 				$sqlQuery = new SQLQuery(
-					$select = 'a.ID',
+					$select = 'AdObject.ID',
 					$from = array($base_from),
 					$where = $base_where . "
-						and (a.ImpressionLimit = 0 or a.ImpressionLimit > a.Impressions)
-						and a.Weight >= (rand() * (
-							select max(aa.Weight)
-							from AdObject as aa
-								left join AdCampaign cc on cc.ID = aa.CampaignID
+						and (AdObject.ImpressionLimit = 0 or AdObject.ImpressionLimit > AdObject.Impressions)
+						and AdObject.Weight >= (rand() * (
+							select max(AdObjectAdObject.Weight)
+							from AdObject as AdObjectAdObject
+								left join AdCampaign cc on cc.ID = AdObjectAdObject.CampaignID
 							where " . $subbase_where . "
 						))",
 					$order = "rand()",
 					$limit = 1
 				);
+				singleton('AdObject')->extend('augmentSQL', $sqlQuery);
 				//echo $sqlQuery->sql();
 				$result = $sqlQuery->execute();
 				if($result && count($result) > 0) {

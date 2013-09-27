@@ -102,7 +102,7 @@ class AdObject extends DataObject {
 				new CheckboxField('Active', _t('AdObject.db_Active', 'Active')),
 				new LiteralField('Preview', '<a href="'.$previewLink.'" target="_blank">' . _t('AdObject.Preview', 'Preview this advertisement') . "</a>"),
 			));
-			
+
 			$app_categories = File::config()->app_categories;
 			$file->setFolderName($this->config()->files_dir);
 			$file->getValidator()->setAllowedMaxFileSize(array('*' => $this->config()->max_file_size));
@@ -121,6 +121,7 @@ class AdObject extends DataObject {
 			$Expires->setConfig('min', date('Y-m-d', strtotime($this->Starts ? $this->Starts : '+1 days')));
 		}
 
+		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}
 
