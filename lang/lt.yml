@@ -37,7 +37,7 @@ lt:
     db_Order: 'Eil. nr.'
     db_Active: 'Aktyvus'
     has_one_ParentZone: 'Priklauso zonai'
-    has_many_Advertisements: 'Reklaminiai skydeliai'
+    has_many_Ads: 'Reklaminiai skydeliai'
     has_many_ChildZones: 'Priklausomos zonos'
 
   AdCampaign:
@@ -48,6 +48,7 @@ lt:
     db_Expires: 'Publikavimo pabaiga'
     db_Active: 'Aktyvus'
     has_one_Client: 'Klientas'
+    has_many_Ads: 'Reklaminiai skydeliai'
 
   AdClient:
     SINGULARNAME: 'Klientas'

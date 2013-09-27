@@ -37,7 +37,7 @@ en:
     db_Order: 'Order'
     db_Active: 'Active'
     has_one_ParentZone: 'Parent Zone'
-    has_many_Advertisements: 'Advertisements'
+    has_many_Ads: 'Advertisements'
     has_many_ChildZones: 'Child Zones'
 
   AdCampaign:
@@ -48,6 +48,7 @@ en:
     db_Expires: 'Expires'
     db_Active: 'Active'
     has_one_Client: 'Client'
+    has_many_Ads: 'Advertisements'
 
   AdClient:
     SINGULARNAME: 'Client'
