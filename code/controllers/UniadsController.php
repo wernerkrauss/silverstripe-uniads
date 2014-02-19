@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Description of AdController
+ * Description of UniadsController
  *
  * @author Elvinas Liutkevičius <elvinas@unisolutions.eu>
  * @author Marcus Nyeholt <marcus@silverstripe.com.au>
  * @license BSD http://silverstripe.org/BSD-license
  */
-class AdController extends Controller {
+class UniadsController extends Controller {
 
 	public function clk() {
 		$this->GetAdAndLogClick($this->request->requestVar('id'));
@@ -23,15 +23,15 @@ class AdController extends Controller {
 	private function GetAdAndLogClick($id) {
 		$id = (int) $id;
 		if ($id) {
-			$ad = DataObject::get_by_id('AdObject', $id);
+			$ad = DataObject::get_by_id('UniadsObject', $id);
 			if ($ad && $ad->exists()) {
-				$conf = AdObject::config();
+				$conf = UniadsObject::config();
 				if ($conf->record_clicks) {
 					$ad->Clicks++;
 					$ad->write();
 				}
 				if ($conf->record_clicks_stats) {
-					$clk = new AdClick;
+					$clk = new UniadsClick;
 					$clk->AdID = $ad->ID;
 					$clk->write();
 				}

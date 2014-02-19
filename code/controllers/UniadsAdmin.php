@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Description of AdAdmin
+ * Description of UniadsAdmin
  *
  * @author Elvinas Liutkevičius <elvinas@unisolutions.eu>
  * @author Marcus Nyeholt <marcus@silverstripe.com.au>
  * @license BSD http://silverstripe.org/BSD-license
  */
-class AdAdmin extends ModelAdmin {
+class UniadsAdmin extends ModelAdmin {
 	public static $managed_models = array(
-		'AdObject',
-		'AdCampaign',
-		'AdClient',
-		'AdZone',
+		'UniadsObject',
+		'UniadsCampaign',
+		'UniadsClient',
+		'UniadsZone',
 	);
 
 	static $allowed_actions = array(
@@ -36,7 +36,7 @@ class AdAdmin extends ModelAdmin {
 	public function preview(SS_HTTPRequest $request) {
 		$request->shift();
 		$adID = (int) $request->param('ID');
-		$ad = DataObject::get_by_id('AdObject', $adID);
+		$ad = DataObject::get_by_id('UniadsObject', $adID);
 
 		if (!$ad) {
 			Controller::curr()->httpError(404);
@@ -44,7 +44,7 @@ class AdAdmin extends ModelAdmin {
 		}
 
 		// No impression and click tracking for previews
-		$conf = AdObject::config();
+		$conf = UniadsObject::config();
 		$conf->use_js_tracking = false;
 		$conf->record_impressions = false;
 		$conf->record_impressions_stats = false;
@@ -52,7 +52,7 @@ class AdAdmin extends ModelAdmin {
 		// Block stylesheets and JS that are not required (using our own template)
 		Requirements::clear();
 
-		$template = new SSViewer('AdPreviewPage');
+		$template = new SSViewer('UniadsPreview');
 
 		return $template->Process($ad);
 	}

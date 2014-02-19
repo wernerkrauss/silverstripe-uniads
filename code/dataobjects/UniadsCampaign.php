@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Description of AdCampaign
+ * Description of UniadsCampaign
  *
  * @author Elvinas Liutkevičius <elvinas@unisolutions.eu>
  * @author Marcus Nyeholt <marcus@silverstripe.com.au>
  * @license BSD http://silverstripe.org/BSD-license
  */
-class AdCampaign extends DataObject {
+class UniadsCampaign extends DataObject {
 	public static $db = array(
 		'Title' => 'Varchar',
 		'Starts' => 'Date',
@@ -23,11 +23,11 @@ class AdCampaign extends DataObject {
 	);
 
 	public static $has_many = array(
-		'Ads' => 'AdObject',
+		'Ads' => 'UniadsObject',
 	);
 
 	public static $has_one = array(
-		'Client' => 'AdClient',
+		'Client' => 'UniadsClient',
 	);
 
 	public function getCMSFields() {

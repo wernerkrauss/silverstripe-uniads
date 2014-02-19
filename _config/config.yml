@@ -1,0 +1,6 @@
+---
+Name: uniads
+---
+Page:
+  extensions:
+    - 'UniadsExtension'

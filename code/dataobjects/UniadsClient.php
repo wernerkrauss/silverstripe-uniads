@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Description of AdClient
+ * Description of UniadsClient
  *
  * @author Elvinas Liutkevičius <elvinas@unisolutions.eu>
  * @author Marcus Nyeholt <marcus@silverstripe.com.au>
  * @license BSD http://silverstripe.org/BSD-license
  */
-class AdClient extends DataObject {
+class UniadsClient extends DataObject {
 	public static $db = array(
 		'Title' => 'Varchar(128)',
 		'ContactEmail' => 'Text',

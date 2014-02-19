@@ -1,8 +1,8 @@
 lt:
-  AdAdmin:
+  UniadsAdmin:
     MENUTITLE: 'Reklaminiai skydeliai'
 
-  AdObject:
+  UniadsObject:
     SINGULARNAME: 'Reklaminis skydelis'
     PLURALNAME: 'Reklaminiai skydeliai'
     db_Title: 'Pavadinimas'
@@ -28,7 +28,7 @@ lt:
     UseCampaign: 'Naudoti kampaniją'
     ClicksNotApplicable: 'Nėra (išorinis skydelis)'
 
-  AdZone:
+  UniadsZone:
     SINGULARNAME: 'Skydelių zona'
     PLURALNAME: 'Skydelių zonos'
     db_Title: 'Pavadinimas'
@@ -40,7 +40,7 @@ lt:
     has_many_Ads: 'Reklaminiai skydeliai'
     has_many_ChildZones: 'Priklausomos zonos'
 
-  AdCampaign:
+  UniadsCampaign:
     SINGULARNAME: 'Kampanija'
     PLURALNAME: 'Kampanijos'
     db_Title: 'Pavadinimas'
@@ -50,7 +50,7 @@ lt:
     has_one_Client: 'Klientas'
     has_many_Ads: 'Reklaminiai skydeliai'
 
-  AdClient:
+  UniadsClient:
     SINGULARNAME: 'Klientas'
     PLURALNAME: 'Klientai'
     db_Title: 'Pavadinimas'

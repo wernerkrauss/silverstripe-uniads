@@ -1,8 +1,8 @@
 en:
-  AdAdmin:
+  UniadsAdmin:
     MENUTITLE: 'Ads'
 
-  AdObject:
+  UniadsObject:
     SINGULARNAME: 'Advertisement'
     PLURALNAME: 'Advertisements'
     db_Title: 'Title'
@@ -28,7 +28,7 @@ en:
     UseCampaign: 'Use Campaign'
     ClicksNotApplicable: 'Not Applicable (external advertisement)'
 
-  AdZone:
+  UniadsZone:
     SINGULARNAME: 'Ad Zone'
     PLURALNAME: 'Ad Zones'
     db_Title: 'Title'
@@ -40,7 +40,7 @@ en:
     has_many_Ads: 'Advertisements'
     has_many_ChildZones: 'Child Zones'
 
-  AdCampaign:
+  UniadsCampaign:
     SINGULARNAME: 'Campaign'
     PLURALNAME: 'Campaigns'
     db_Title: 'Title'
@@ -50,7 +50,7 @@ en:
     has_one_Client: 'Client'
     has_many_Ads: 'Advertisements'
 
-  AdClient:
+  UniadsClient:
     SINGULARNAME: 'Client'
     PLURALNAME: 'Clients'
     db_Title: 'Title'

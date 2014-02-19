@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Description of AdImpression
+ * Description of UniadsImpression
  *
  * @author Elvinas Liutkevičius <elvinas@unisolutions.eu>
  * @author Marcus Nyeholt <marcus@silverstripe.com.au>
  * @license BSD http://silverstripe.org/BSD-license
  */
-class AdImpression extends DataObject {
+class UniadsImpression extends DataObject {
 	public static $db = array(
 		'UserAgent' => 'Varchar(128)',
 		'BrowserVersion' => 'Varchar',
@@ -23,7 +23,7 @@ class AdImpression extends DataObject {
 
 	public static $has_one = array(
 		'User' => 'Member',
-		'Ad' => 'AdObject',
+		'Ad' => 'UniadsObject',
 	);
 
 	public function onBeforeWrite() {

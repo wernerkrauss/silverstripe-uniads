@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Description of AdZone
+ * Description of UniadsZone
  *
  * @author Elvinas Liutkevičius <elvinas@unisolutions.eu>
  * @license BSD http://silverstripe.org/BSD-license
  */
 
-class AdZone extends DataObject {
+class UniadsZone extends DataObject {
 	public static $db = array(
 		'Title' => 'Varchar',
 		'ZoneWidth' => 'Varchar(6)',
@@ -24,12 +24,12 @@ class AdZone extends DataObject {
 	);
 
 	public static $has_one = array(
-		'ParentZone' => 'AdZone',
+		'ParentZone' => 'UniadsZone',
 	);
 
 	public static $has_many = array(
-		'Ads' => 'AdObject',
-		'ChildZones' => 'AdZone',
+		'Ads' => 'UniadsObject',
+		'ChildZones' => 'UniadsZone',
 	);
 
 	public static $indexes = array(
@@ -58,7 +58,7 @@ class AdZone extends DataObject {
 	function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 
-		$labels['ParentZone.Title'] = _t('AdZone.has_one_ParentZone', 'Parent Zone');
+		$labels['ParentZone.Title'] = _t('UniadsZone.has_one_ParentZone', 'Parent Zone');
 
 		return $labels;
 	}
@@ -76,7 +76,7 @@ class AdZone extends DataObject {
 
 		if (($field = $fields->dataFieldByName('ParentZoneID'))) {
 			$field->setSource(
-				DataList::create('AdZone')
+				DataList::create('UniadsZone')
 				->where("ID != " . $this->ID . " and (ParentZoneID is null or ParentZoneID = 0)")
 				->map()
 			);

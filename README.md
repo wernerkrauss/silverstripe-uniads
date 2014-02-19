@@ -62,4 +62,4 @@ The ads will be shown in this way:
 	...
 
 
-Check the AdObject class for more.
+Check the UniadsObject class for more.

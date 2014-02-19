@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Description of AdObject (ddvertisement object)
+ * Description of UniadsObject (ddvertisement object)
  *
  * @author Elvinas Liutkevičius <elvinas@unisolutions.eu>
  * @author Hans de Ruiter <hans@hdrlab.org.nz>
  * @author Marcus Nyeholt <marcus@silverstripe.com.au>
  * @license BSD http://silverstripe.org/BSD-license
  */
-class AdObject extends DataObject {
+class UniadsObject extends DataObject {
 
 	private static $use_js_tracking = true;
 	private static $record_impressions = true;
@@ -35,8 +35,8 @@ class AdObject extends DataObject {
 
 	public static $has_one = array(
 		'File' => 'File',
-		'Zone' => 'AdZone',
-		'Campaign' => 'AdCampaign',
+		'Zone' => 'UniadsZone',
+		'Campaign' => 'UniadsCampaign',
 		'InternalPage' => 'Page',
 	);
 
@@ -66,10 +66,10 @@ class AdObject extends DataObject {
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 
-		$labels['Campaign.Title'] = _t('AdObject.has_one_Campaign', 'Campaign');
-		$labels['Zone.Title'] = _t('AdObject.has_one_Zone', 'Zone');
-		$labels['Impressions'] = _t('AdObject.db_Impressions', 'Impressions');
-		$labels['Clicks'] = _t('AdObject.db_Clicks', 'Clicks');
+		$labels['Campaign.Title'] = _t('UniadsObject.has_one_Campaign', 'Campaign');
+		$labels['Zone.Title'] = _t('UniadsObject.has_one_Zone', 'Zone');
+		$labels['Impressions'] = _t('UniadsObject.db_Impressions', 'Impressions');
+		$labels['Clicks'] = _t('UniadsObject.db_Clicks', 'Clicks');
 
 		return $labels;
 	}
@@ -78,29 +78,29 @@ class AdObject extends DataObject {
 	public function getCMSFields() {
 		$fields = new FieldList();
 		$fields->push(new TabSet('Root', new Tab('Main', _t('SiteTree.TABMAIN', 'Main')
-			, new TextField('Title', _t('AdObject.db_Title', 'Title'))
+			, new TextField('Title', _t('UniadsObject.db_Title', 'Title'))
 		)));
 
 		if ($this->ID) {
-			$previewLink = Director::absoluteBaseURL() . 'admin/' . AdAdmin::$url_segment . '/AdObject/preview/' . $this->ID;
+			$previewLink = Director::absoluteBaseURL() . 'admin/' . UniadsAdmin::$url_segment . '/UniadsObject/preview/' . $this->ID;
 
-			$fields->addFieldToTab('Root.Main', new ReadonlyField('Impressions', _t('AdObject.db_Impressions', 'Impressions')), 'Title');
-			$fields->addFieldToTab('Root.Main', new ReadonlyField('Clicks', _t('AdObject.db_Clicks', 'Clicks')), 'Title');
+			$fields->addFieldToTab('Root.Main', new ReadonlyField('Impressions', _t('UniadsObject.db_Impressions', 'Impressions')), 'Title');
+			$fields->addFieldToTab('Root.Main', new ReadonlyField('Clicks', _t('UniadsObject.db_Clicks', 'Clicks')), 'Title');
 
 			$fields->addFieldsToTab('Root.Main', array(
-				DropdownField::create('CampaignID', _t('AdObject.has_one_Campaign', 'Campaign'), DataList::create('AdCampaign')->map())->setEmptyString(_t('AdObject.Campaign_none', 'none')),
-				DropdownField::create('ZoneID', _t('AdObject.has_one_Zone', 'Zone'), DataList::create('AdZone')->map())->setEmptyString(_t('AdObject.Zone_select', 'select one')),
-				new NumericField('Weight', _t('AdObject.db_Weight', 'Weight (controls how often it will be shown relative to others)')),
-				new TextField('TargetURL', _t('AdObject.db_TargetURL', 'Target URL')),
-				new Treedropdownfield('InternalPageID', _t('AdObject.has_one_InternalPage', 'Internal Page Link'), 'Page'),
-				new CheckboxField('NewWindow', _t('AdObject.db_NewWindow', 'Open in a new Window')),
-				$file = new UploadField('File', _t('AdObject.has_one_File', 'Advertisement File')),
-				$AdContent = new TextareaField('AdContent', _t('AdObject.db_AdContent', 'Advertisement Content')),
-				$Starts = new DateField('Starts', _t('AdObject.db_Starts', 'Starts')),
-				$Expires = new DateField('Expires', _t('AdObject.db_Expires', 'Expires')),
-				new NumericField('ImpressionLimit', _t('AdObject.db_ImpressionLimit', 'Impression Limit')),
-				new CheckboxField('Active', _t('AdObject.db_Active', 'Active')),
-				new LiteralField('Preview', '<a href="'.$previewLink.'" target="_blank">' . _t('AdObject.Preview', 'Preview this advertisement') . "</a>"),
+				DropdownField::create('CampaignID', _t('UniadsObject.has_one_Campaign', 'Campaign'), DataList::create('UniadsCampaign')->map())->setEmptyString(_t('UniadsObject.Campaign_none', 'none')),
+				DropdownField::create('ZoneID', _t('UniadsObject.has_one_Zone', 'Zone'), DataList::create('UniadsZone')->map())->setEmptyString(_t('UniadsObject.Zone_select', 'select one')),
+				new NumericField('Weight', _t('UniadsObject.db_Weight', 'Weight (controls how often it will be shown relative to others)')),
+				new TextField('TargetURL', _t('UniadsObject.db_TargetURL', 'Target URL')),
+				new Treedropdownfield('InternalPageID', _t('UniadsObject.has_one_InternalPage', 'Internal Page Link'), 'Page'),
+				new CheckboxField('NewWindow', _t('UniadsObject.db_NewWindow', 'Open in a new Window')),
+				$file = new UploadField('File', _t('UniadsObject.has_one_File', 'Advertisement File')),
+				$AdContent = new TextareaField('AdContent', _t('UniadsObject.db_AdContent', 'Advertisement Content')),
+				$Starts = new DateField('Starts', _t('UniadsObject.db_Starts', 'Starts')),
+				$Expires = new DateField('Expires', _t('UniadsObject.db_Expires', 'Expires')),
+				new NumericField('ImpressionLimit', _t('UniadsObject.db_ImpressionLimit', 'Impression Limit')),
+				new CheckboxField('Active', _t('UniadsObject.db_Active', 'Active')),
+				new LiteralField('Preview', '<a href="'.$previewLink.'" target="_blank">' . _t('UniadsObject.Preview', 'Preview this advertisement') . "</a>"),
 			));
 
 			$app_categories = File::config()->app_categories;
@@ -143,7 +143,7 @@ class AdObject extends DataObject {
 	}
 
 	public function forTemplate() {
-		$template = new SSViewer('AdObject');
+		$template = new SSViewer('UniadsObject');
 		return $template->process($this);
 	}
 
