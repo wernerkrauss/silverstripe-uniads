@@ -147,8 +147,12 @@ class UniadsObject extends DataObject {
 		return $template->process($this);
 	}
 
+	public function UseJsTracking() {
+		return $this->config()->use_js_tracking;
+	}
+
 	public function Link() {
-		if ($this->config()->use_js_tracking) {
+		if ($this->UseJsTracking()) {
 			Requirements::javascript(THIRDPARTY_DIR.'/jquery/jquery.js'); // TODO: How about jquery.min.js?
 			Requirements::javascript(ADS_MODULE_DIR.'/javascript/uniads.js');
 
