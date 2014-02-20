@@ -27,7 +27,7 @@ class UniadsAdmin extends ModelAdmin {
 
 
 	public function __construct() {
-		self::$menu_icon = ADS_MODULE_DIR . '/images/icon-advrt.png';
+		$this->config()->menu_icon = ADS_MODULE_DIR . '/images/icon-advrt.png';
 		parent::__construct();
 	}
 
