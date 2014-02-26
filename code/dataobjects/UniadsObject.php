@@ -82,7 +82,7 @@ class UniadsObject extends DataObject {
 		)));
 
 		if ($this->ID) {
-			$previewLink = Director::absoluteBaseURL() . 'admin/' . AdAdmin::config()->url_segment . '/UniadsObject/preview/' . $this->ID;
+			$previewLink = Director::absoluteBaseURL() . 'admin/' . UniadsAdmin::config()->url_segment . '/UniadsObject/preview/' . $this->ID;
 
 			$fields->addFieldToTab('Root.Main', new ReadonlyField('Impressions', _t('UniadsObject.db_Impressions', 'Impressions')), 'Title');
 			$fields->addFieldToTab('Root.Main', new ReadonlyField('Clicks', _t('UniadsObject.db_Clicks', 'Clicks')), 'Title');
