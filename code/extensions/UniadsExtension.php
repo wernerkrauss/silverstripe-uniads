@@ -10,20 +10,20 @@
  */
 class UniadsExtension extends DataExtension {
 
-	public static $db = array(
+	private static $db = array(
 		'InheritSettings' => 'Boolean',
 	);
-	public static $defaults = array(
+	private static $defaults = array(
 		'InheritSettings' => true
 	);
-	public static $many_many = array(
+	private static $many_many = array(
 		'Ads' => 'UniadsObject',
 	);
-	public static $has_one = array(
+	private static $has_one = array(
 		'UseCampaign' => 'UniadsCampaign',
 	);
 
-	function getListboxOptions($o) {
+	private function getListboxOptions($o) {
 		$list = new DataList($o);
 		return array('' => '') + $list->map()->toArray();
 	}
@@ -157,4 +157,5 @@ class UniadsExtension extends DataExtension {
 
 		return $output;
 	}
+
 }

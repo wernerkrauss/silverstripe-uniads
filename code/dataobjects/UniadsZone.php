@@ -8,7 +8,8 @@
  */
 
 class UniadsZone extends DataObject {
-	public static $db = array(
+
+	private static $db = array(
 		'Title' => 'Varchar',
 		'ZoneWidth' => 'Varchar(6)',
 		'ZoneHeight' => 'Varchar(6)',
@@ -16,36 +17,36 @@ class UniadsZone extends DataObject {
 		'Active' => 'Boolean',
 	);
 
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		'Title',
 		'ParentZone.Title',
 		'Order',
 		'Active',
 	);
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'ParentZone' => 'UniadsZone',
 	);
 
-	public static $has_many = array(
+	private static $has_many = array(
 		'Ads' => 'UniadsObject',
 		'ChildZones' => 'UniadsZone',
 	);
 
-	public static $indexes = array(
+	private static $indexes = array(
 		'Title' => true,
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		'Active' => 1,
 	);
 
-	public static $default_records = array(
+	private static $default_records = array(
 		array('Title' => 'Top', 'ZoneWidth' => '500', 'ZoneHeight' => '90'),
 		array('Title' => 'Right', 'ZoneWidth' => '160', 'ZoneHeight' => '600'),
 	);
 
-	public static $default_sort = 'ParentZoneID asc, Order asc, ID asc';
+	private static $default_sort = 'ParentZoneID asc, Order asc, ID asc';
 
 	public function getWidth(){
 		return $this->ZoneWidth . (ctype_digit($this->ZoneWidth) ? 'px' : '');
@@ -55,7 +56,7 @@ class UniadsZone extends DataObject {
 		return $this->ZoneHeight . (ctype_digit($this->ZoneHeight) ? 'px' : '');
 	}
 
-	function fieldLabels($includerelations = true) {
+	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
 
 		$labels['ParentZone.Title'] = _t('UniadsZone.has_one_ParentZone', 'Parent Zone');
@@ -84,4 +85,5 @@ class UniadsZone extends DataObject {
 
 		return $fields;
 	}
+
 }

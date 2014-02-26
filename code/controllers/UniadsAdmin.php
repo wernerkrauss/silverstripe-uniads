@@ -8,22 +8,23 @@
  * @license BSD http://silverstripe.org/BSD-license
  */
 class UniadsAdmin extends ModelAdmin {
-	public static $managed_models = array(
+
+	private static $managed_models = array(
 		'UniadsObject',
 		'UniadsCampaign',
 		'UniadsClient',
 		'UniadsZone',
 	);
 
-	static $allowed_actions = array(
+	private static $allowed_actions = array(
 		'preview'
 	);
 
-	static $url_rule = '/$ModelClass/$Action/$ID/$OtherID';
+	private static $url_rule = '/$ModelClass/$Action/$ID/$OtherID';
 
-	public static $url_segment = 'advrt';
-	public static $menu_title = 'Ads';
-	public static $menu_icon = '';
+	private static $url_segment = 'advrt';
+	private static $menu_title = 'Ads';
+	private static $menu_icon = '';
 
 
 	public function __construct() {
@@ -56,4 +57,5 @@ class UniadsAdmin extends ModelAdmin {
 
 		return $template->Process($ad);
 	}
+
 }

@@ -19,7 +19,7 @@ class UniadsObject extends DataObject {
 	private static $files_dir = 'UploadedAds';
 	private static $max_file_size = 2097152;
 
-	public static $db = array(
+	private static $db = array(
 		'Title' => 'Varchar',
 		'Starts' => 'Date',
 		'Expires' => 'Date',
@@ -33,28 +33,28 @@ class UniadsObject extends DataObject {
 		'Clicks' => 'Int',
 	);
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'File' => 'File',
 		'Zone' => 'UniadsZone',
 		'Campaign' => 'UniadsCampaign',
 		'InternalPage' => 'Page',
 	);
 
-	public static $belongs_many_many = array(
+	private static $belongs_many_many = array(
 		'AdInPages' => 'Page',
 	);
 
 
-	public static $defaults = array(
+	private static $defaults = array(
 		'Active' => 0,
 		'NewWindow' => 1,
 		'ImpressionLimit' => 0,
 		'Weight' => 1.0,
 	);
-	public static $searchable_fields = array(
+	private static $searchable_fields = array(
 		'Title',
 	);
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		'Title',
 		'Campaign.Title',
 		'Zone.Title',
@@ -82,7 +82,7 @@ class UniadsObject extends DataObject {
 		)));
 
 		if ($this->ID) {
-			$previewLink = Director::absoluteBaseURL() . 'admin/' . UniadsAdmin::$url_segment . '/UniadsObject/preview/' . $this->ID;
+			$previewLink = Director::absoluteBaseURL() . 'admin/' . AdAdmin::config()->url_segment . '/UniadsObject/preview/' . $this->ID;
 
 			$fields->addFieldToTab('Root.Main', new ReadonlyField('Impressions', _t('UniadsObject.db_Impressions', 'Impressions')), 'Title');
 			$fields->addFieldToTab('Root.Main', new ReadonlyField('Clicks', _t('UniadsObject.db_Clicks', 'Clicks')), 'Title');

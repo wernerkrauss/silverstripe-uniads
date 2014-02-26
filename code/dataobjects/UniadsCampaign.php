@@ -8,25 +8,26 @@
  * @license BSD http://silverstripe.org/BSD-license
  */
 class UniadsCampaign extends DataObject {
-	public static $db = array(
+
+	private static $db = array(
 		'Title' => 'Varchar',
 		'Starts' => 'Date',
 		'Expires' => 'Date',
 		'Active' => 'Boolean',
 	);
 
-	public static $summary_fields = array(
+	private static $summary_fields = array(
 		'Title' => 'Title',
 		'Starts' => 'Starts',
 		'Expires' => 'Expires',
 		'Active' => 'Active',
 	);
 
-	public static $has_many = array(
+	private static $has_many = array(
 		'Ads' => 'UniadsObject',
 	);
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'Client' => 'UniadsClient',
 	);
 
@@ -54,4 +55,5 @@ class UniadsCampaign extends DataObject {
 
 		return $fields;
 	}
+
 }

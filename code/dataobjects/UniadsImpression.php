@@ -8,7 +8,8 @@
  * @license BSD http://silverstripe.org/BSD-license
  */
 class UniadsImpression extends DataObject {
-	public static $db = array(
+
+	private static $db = array(
 		'UserAgent' => 'Varchar(128)',
 		'BrowserVersion' => 'Varchar',
 		'Browser' => 'Varchar',
@@ -21,7 +22,7 @@ class UniadsImpression extends DataObject {
 		'RemoteIP' => 'Varchar',
 	);
 
-	public static $has_one = array(
+	private static $has_one = array(
 		'User' => 'Member',
 		'Ad' => 'UniadsObject',
 	);

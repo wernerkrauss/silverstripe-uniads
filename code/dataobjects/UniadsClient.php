@@ -8,12 +8,15 @@
  * @license BSD http://silverstripe.org/BSD-license
  */
 class UniadsClient extends DataObject {
-	public static $db = array(
+
+	private static $db = array(
 		'Title' => 'Varchar(128)',
 		'ContactEmail' => 'Text',
 	);
-	public static $summary_fields = array(
+
+	private static $summary_fields = array(
 		'Title',
 		'ContactEmail',
 	);
+
 }
