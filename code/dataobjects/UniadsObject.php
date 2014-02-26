@@ -190,7 +190,7 @@ class UniadsObject extends DataObject {
 					</object>
 				';
 			} else if ($file->appCategory() == 'image') {
-				return '<img src="'.$file->URL.'" style="width:100%;display:block;" alt="'.$file->Filename.'" />';
+				return '<img src="'.$file->URL.'" style="width:100%;display:block;" alt="'.$file->Title.'" />';
 			}
 		}
 		return $this->AdContent;
