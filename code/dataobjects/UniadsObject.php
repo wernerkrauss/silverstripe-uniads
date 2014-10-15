@@ -176,17 +176,19 @@ class UniadsObject extends DataObject {
 		if ($file) {
 			if ($file->appCategory() == 'flash') {
 				return '
-					<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="'.$zone->Width.'" height="'.$zone->Height.'">
-					<param name="movie" value="'.$file->Filename.'" />
-					<param name="quality" value="high" />
-					<embed
-						src="'.$file->Filename.'"
-						quality="high"
-						width="'.$zone->Width.'"
-						height="'.$zone->Height.'"
-						type="application/x-shockwave-flash"
-						pluginspage="http://www.macromedia.com/go/getflashplayer">
-					</embed>
+					<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="'.$zone->Width.'" height="'.$zone->Height.'" style="display:block;">
+						<param name="movie" value="'.$file->Filename.'" />
+						<param name="quality" value="high" />
+						<param name="wmode" value="transparent" />
+						<embed
+							src="'.$file->Filename.'"
+							quality="high"
+							wmode="transparent"
+							width="'.$zone->Width.'"
+							height="'.$zone->Height.'"
+							type="application/x-shockwave-flash"
+							pluginspage="http://www.macromedia.com/go/getflashplayer">
+						</embed>
 					</object>
 				';
 			} else if ($file->appCategory() == 'image') {
