@@ -151,6 +151,10 @@ class UniadsObject extends DataObject {
 		return $this->config()->use_js_tracking;
 	}
 
+	public function TrackingLink($absolute = false) {
+		return Controller::join_links($absolute ? Director::absoluteBaseURL() : Director::baseURL(), 'uniads-click/go/'.$this->ID);
+	}
+
 	public function Link() {
 		if ($this->UseJsTracking()) {
 			Requirements::javascript(THIRDPARTY_DIR.'/jquery/jquery.js'); // TODO: How about jquery.min.js?
@@ -158,7 +162,7 @@ class UniadsObject extends DataObject {
 
 			$link = Convert::raw2att($this->getTarget());
 		} else {
-			$link = Controller::join_links(Director::baseURL(), 'advrt-click/go/'.$this->ID);
+			$link = $this->TrackingLink();
 		}
 		return $link;
 	}
@@ -166,7 +170,7 @@ class UniadsObject extends DataObject {
 	public function getTarget() {
 		return $this->InternalPageID
 			? $this->InternalPage()->AbsoluteLink()
-			: (strpos($this->TargetURL, 'http') !== 0 ? 'http://' : '') . $this->TargetURL
+			: ($this->TargetURL ? (strpos($this->TargetURL, 'http') !== 0 ? 'http://' : '') . $this->TargetURL : false)
 		;
 	}
 
@@ -175,13 +179,14 @@ class UniadsObject extends DataObject {
 		$zone = $this->getComponent('Zone');
 		if ($file) {
 			if ($file->appCategory() == 'flash') {
+				$src = $this->getTarget() ? HTTP::setGetVar('clickTAG', $this->TrackingLink(true), $file->Filename) : $file->Filename;
 				return '
 					<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="'.$zone->Width.'" height="'.$zone->Height.'" style="display:block;">
-						<param name="movie" value="'.$file->Filename.'" />
+						<param name="movie" value="'.$src.'" />
 						<param name="quality" value="high" />
 						<param name="wmode" value="transparent" />
 						<embed
-							src="'.$file->Filename.'"
+							src="'.$src.'"
 							quality="high"
 							wmode="transparent"
 							width="'.$zone->Width.'"

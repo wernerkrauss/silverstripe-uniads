@@ -21,7 +21,8 @@ class UniadsController extends Controller {
 	public function go() {
 		$ad = $this->GetAdAndLogClick($this->request->param('ID'));
 		if ($ad) {
-			$this->redirect($ad->getTarget());
+			$target = $ad->getTarget();
+			$this->redirect($target ? $target : Director::baseURL());
 		}
 	}
 
