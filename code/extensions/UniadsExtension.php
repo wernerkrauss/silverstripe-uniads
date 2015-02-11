@@ -52,7 +52,12 @@ class UniadsExtension extends DataExtension {
 
 		if ($zone) {
 			if (!is_object($zone)) {
-				$zone = DataObject::get_one('UniadsZone', "Title = '".Convert::raw2sql($zone)."' and Active = 1");
+				$zone = UniadsZone::get()
+					->filter(array(
+						'Title' => $zone,
+						'Active' => 1
+					))
+					->first();
 			}
 			if ($zone) {
 				$toUse = $this->owner;
@@ -123,7 +128,7 @@ class UniadsExtension extends DataExtension {
 				if($result && count($result) > 0) {
 					$row = $result->First();
 					if (isset($row['ID']) && $row['ID'] !== '') {
-						$ad = DataObject::get_one('UniadsObject', "ID = " . $row['ID']);
+						$ad = UniadsObject::get()->byID($row['ID']);
 						// now we can log impression
 						$conf = UniadsObject::config();
 						if ($conf->record_impressions) {

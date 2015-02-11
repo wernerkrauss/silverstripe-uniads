@@ -29,7 +29,7 @@ class UniadsController extends Controller {
 	private function GetAdAndLogClick($id) {
 		$id = (int) $id;
 		if ($id) {
-			$ad = DataObject::get_by_id('UniadsObject', $id);
+			$ad = UniadsObject::get()->byID($id);
 			if ($ad && $ad->exists()) {
 				$conf = UniadsObject::config();
 				if ($conf->record_clicks) {
