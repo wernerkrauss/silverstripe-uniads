@@ -37,7 +37,7 @@ class UniadsAdmin extends ModelAdmin {
 	public function preview(SS_HTTPRequest $request) {
 		$request->shift();
 		$adID = (int) $request->param('ID');
-		$ad = DataObject::get_by_id('UniadsObject', $adID);
+		$ad = UniadsObject::get()->byID($adID);
 
 		if (!$ad) {
 			Controller::curr()->httpError(404);
