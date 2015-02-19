@@ -73,73 +73,60 @@ class UniadsExtension extends DataExtension {
 					}
 				}
 
-				$page_related = "and not exists (select * from Page_Ads pa where pa.UniadsObjectID = UniadsObject.ID)";
-				$campaign = '';
+				$UniadsObject = UniadsObject::get()->filter(array(
+					'ZoneID' => $zone->ID,
+					'Active' => 1
+				));
+
+				//filter for Ads not exclusively associated with a page
+				//how to convert this to ORM filter?
+				$UniadsObject = $UniadsObject->where('not exists (select * from Page_Ads pa where pa.UniadsObjectID = UniadsObject.ID)');
+
+				//page specific ads, use only them
 				if ($toUse) {
-					$page_related = "and (
+					$UniadsObject = $UniadsObject->where("(
 						exists (select * from Page_Ads pa where pa.UniadsObjectID = UniadsObject.ID and pa.PageID = ".$toUse->ID.")
 						or not exists (select * from Page_Ads pa where pa.UniadsObjectID = UniadsObject.ID)
-					)";
+					)");
 					if ($toUse->UseCampaignID) {
-						$campaign = "and c.ID = '" . $toUse->UseCampaignID . "'";
+						$UniadsObject = $UniadsObject->addFilter(array('CampaignID' => $toUse->UseCampaignID));
 					}
 				}
 
-				$base_from = "
-					UniadsObject
-						left join UniadsCampaign c on c.ID = UniadsObject.CampaignID
-				";
-				$base_where = "
-					UniadsObject.ZoneID = '" . $zone->ID . "'
-					".$page_related."
-					and (c.ID is null or (
+				$UniadsObject = $UniadsObject->leftJoin('UniAdsCampaign', 'c.ID = UniadsObject.CampaignID', 'c');
+
+				//current ads and campaigns
+				$campaignFilter = "(c.ID is null or (
 						c.Active = '1'
 						and (c.Starts <= '" . date('Y-m-d') . "' or c.Starts = '' or c.Starts is null)
 						and (c.Expires >= '" . date('Y-m-d') . "' or c.Expires = '' or c.Expires is null)
-						".$campaign."
 					))
 					and (UniadsObject.Starts <= '" . date('Y-m-d') . "' or UniadsObject.Starts = '' or UniadsObject.Starts is null)
 					and (UniadsObject.Expires >= '" . date('Y-m-d') . "' or UniadsObject.Expires = '' or UniadsObject.Expires is null)
-					and UniadsObject.Active = '1'
 				";
-				$subbase_where = preg_replace_callback(
-					'/(?<!\w)(UniadsObject|c)\./'
-					, function ($m) { return str_repeat($m[1], 2).'.'; }
-					, $base_where
-				);
 
-				$sqlQuery = new SQLQuery(
-					$select = 'UniadsObject.ID',
-					$from = array($base_from),
-					$where = $base_where . "
-						and (UniadsObject.ImpressionLimit = 0 or UniadsObject.ImpressionLimit > UniadsObject.Impressions)
-						and UniadsObject.Weight >= (rand() * (
-							select max(UniadsObjectUniadsObject.Weight)
-							from UniadsObject as UniadsObjectUniadsObject
-								left join UniadsCampaign cc on cc.ID = UniadsObjectUniadsObject.CampaignID
-							where " . $subbase_where . "
-						))",
-					$order = "rand()",
-					$limit = 1
-				);
-				singleton('UniadsObject')->extend('augmentSQL', $sqlQuery);
-				//echo $sqlQuery->sql();
-				$result = $sqlQuery->execute();
-				if($result && count($result) > 0) {
-					$row = $result->First();
-					if (isset($row['ID']) && $row['ID'] !== '') {
-						$ad = UniadsObject::get()->byID($row['ID']);
-						// now we can log impression
-						$conf = UniadsObject::config();
-						if ($conf->record_impressions) {
-							$ad->Impressions++;
-							$ad->write();
-						}
-						if ($conf->record_impressions_stats) {
-							$imp = new UniadsImpression;
-							$imp->AdID = $ad->ID;
-							$imp->write();
-						}
+				$UniadsObject = $UniadsObject->where($campaignFilter);
+
+
+				$weight = rand(0, $UniadsObject->max('Weight'));
+
+				$ad = $UniadsObject
+					->where('(UniadsObject.ImpressionLimit = 0 or UniadsObject.ImpressionLimit > UniadsObject.Impressions)')
+					->filter(array('Weight:GreaterThanOrEqual' => $weight))
+					->sort('rand()')
+					->First();
+
+				if($ad) {
+					// now we can log impression
+					$conf = UniadsObject::config();
+					if ($conf->record_impressions) {
+						$ad->Impressions++;
+						$ad->write();
+					}
+					if ($conf->record_impressions_stats) {
+						$imp = new UniadsImpression;
+						$imp->AdID = $ad->ID;
+						$imp->write();
 					}
 				}
 			}
