@@ -12,11 +12,11 @@ class UniadsDisplayAdsTest extends SapphireTest {
 	public function testActiveZone(){
 		$page = $this->objFromFixture('Page', 'using-zone');
 
-		$active = $page->getActiveZoneByTitle('ActiveZone');
-		$inactive = $page->getActiveZoneByTitle('InactiveZone');
+		$active = UniadsZone::getActiveZoneByTitle('ActiveZone');
+		$inactive = UniadsZone::getActiveZoneByTitle('InactiveZone');
 
-		$this->assertInstanceOf('UniadsZone', $active);
-		$this->assertNull($inactive);
+		$this->assertInstanceOf('UniadsZone', $active, 'Active zone should be an UniadsZone object');
+		$this->assertNull($inactive, 'Inactive zone must not be returned');
 	}
 
 	public function testGetSettingsPage(){

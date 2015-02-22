@@ -86,4 +86,22 @@ class UniadsZone extends DataObject {
 		return $fields;
 	}
 
+
+	/**
+	 * @param string $title
+	 * @return UniadsZone|null
+	 */
+	public static function getActiveZoneByTitle($title)
+	{
+		$zone = UniadsZone::get()
+			->filter(
+				array(
+					'Title' => $title,
+					'Active' => 1
+				)
+			)
+			->first();
+		return $zone;
+	}
+
 }

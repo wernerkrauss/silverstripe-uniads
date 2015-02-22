@@ -52,7 +52,7 @@ class UniadsExtension extends DataExtension {
 
 		if ($zone) {
 			if (!is_object($zone)) {
-				$zone = $this->getActiveZoneByTitle($zone);
+				$zone = UniadsZone::getActiveZoneByTitle($zone);
 			}
 			if ($zone) {
 				$ad = $this->getAdByZone($zone);
@@ -91,22 +91,6 @@ class UniadsExtension extends DataExtension {
 		return $output;
 	}
 
-	/**
-	 * @param string $title
-	 * @return UniadsZone
-	 */
-	public function getActiveZoneByTitle($title)
-	{
-		$zone = UniadsZone::get()
-			->filter(
-				array(
-					'Title' => $title,
-					'Active' => 1
-				)
-			)
-			->first();
-		return $zone;
-	}
 
 	/**
 	 * Scans over the owning page and all parent pages until it finds the one with the settings for displaying ads
