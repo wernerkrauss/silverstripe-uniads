@@ -40,6 +40,10 @@ class UniadsObject extends DataObject {
 		'InternalPage' => 'Page',
 	);
 
+	private static $has_many = array(
+		'ImpressionDetails' => 'UniadsImpression'
+	);
+
 	private static $belongs_many_many = array(
 		'AdInPages' => 'Page',
 	);
@@ -203,4 +207,22 @@ class UniadsObject extends DataObject {
 		return $this->AdContent;
 	}
 
+	/**
+	 * Increases the impression counter if 'record_impressions' setting is true
+	 * Creates a new UniadsImpression  entry in DB if 'record_impressions_stats' is true
+	 * @return UniadsObject
+	 */
+	public function increaseImpressions(){
+		$ad = clone($this);
+		if ($this->stat('record_impressions')) {
+			$ad->Impressions++;
+			$ad->write();
+		}
+		if ($this->stat('record_impressions_stats')) {
+			$imp = new UniadsImpression;
+			$imp->AdID = $ad->ID;
+			$imp->write();
+		}
+		return $ad;
+	}
 }

@@ -58,17 +58,7 @@ class UniadsExtension extends DataExtension {
 				$ad = $this->getAdByZone($zone);
 
 				if($ad) {
-					// now we can log impression
-					$conf = UniadsObject::config();
-					if ($conf->record_impressions) {
-						$ad->Impressions++;
-						$ad->write();
-					}
-					if ($conf->record_impressions_stats) {
-						$imp = new UniadsImpression;
-						$imp->AdID = $ad->ID;
-						$imp->write();
-					}
+					$ad = $ad->increaseImpressions();
 				}
 			}
 		}

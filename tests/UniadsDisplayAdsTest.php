@@ -73,4 +73,37 @@ class UniadsDisplayAdsTest extends SapphireTest {
 	}
 
 
+	public function testImpressionCounter(){
+		Config::inst()->update('UniadsObject', 'record_impressions', true);
+		$ad = $this->objFromFixture('UniadsObject', 'default');
+		$impressionsBefore = $ad->Impressions;
+
+		$ad = $ad->increaseImpressions();
+		$this->assertEquals($impressionsBefore + 1, $ad->Impressions, 'Impressions should not increase if record_impressions is set to true');
+
+		Config::inst()->update('UniadsObject', 'record_impressions', false);
+		$ad = $this->objFromFixture('UniadsObject', 'default');
+		$impressionsBefore = $ad->Impressions;
+
+		$ad = $ad->increaseImpressions();
+		$this->assertEquals($impressionsBefore, $ad->Impressions, 'Impressions should not increase if record_impressions is set to false');
+
+		/**
+		 * check if an UniadsImpression is generated
+		 */
+		$impressionsCountBefore = $ad->ImpressionDetails()->count();
+
+		Config::inst()->update('UniadsObject', 'record_impressions_stats', false,
+			'The number of UniadsImpressions should not increase the counter if record_impressions_stats is set to false');
+		$ad = $ad->increaseImpressions();
+		$impressionsCountAfter = $ad->ImpressionDetails()->count();
+		$this->assertEquals($impressionsCountBefore, $impressionsCountAfter);
+
+		Config::inst()->update('UniadsObject', 'record_impressions_stats', true);
+		$ad = $ad->increaseImpressions();
+		$impressionsCountAfter = $ad->ImpressionDetails()->count();
+		$this->assertEquals($impressionsCountBefore + 1, $impressionsCountAfter,
+			'The number of UniadsImpressions should increase by one the counter if record_impressions_stats is set to true');
+	}
+
 }
