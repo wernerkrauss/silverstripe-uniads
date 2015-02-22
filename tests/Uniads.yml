@@ -19,6 +19,14 @@ UniadsZone:
   inactive-zone:
     Title: 'InactiveZone'
     Active: 0
+  active-subzone:
+    Title: 'Subzone'
+    Active: 1
+    ParentZone: =>UniadsZone.active-zone
+  inactive-subzone:
+    Title: 'Inactive Subzone'
+    Active: 0
+    ParentZone: =>UniadsZone.active-zone
 UniadsCampaign:
   active-campaign:
     Active: 1
@@ -59,6 +67,10 @@ UniadsObject:
     Zone: =>UniadsZone.active-zone
     Campaign: =>UniadsCampaign.active-campaign2
     Weight: 4
+  subzone-ad:
+    Active: 1
+    Zone: =>UniadsZone.active-subzone
+    Weight: 9
   with-impressionlimit:
     Active: 1
     Zone: =>UniadsZone.active-zone

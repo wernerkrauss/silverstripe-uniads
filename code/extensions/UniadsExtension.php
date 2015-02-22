@@ -48,19 +48,33 @@ class UniadsExtension extends DataExtension {
 	 * @param zone of the advertisement
 	 */
 	public function DisplayAd($zone) {
-		$ad = null;
-
+		$output = '';
 		if ($zone) {
 			if (!is_object($zone)) {
 				$zone = UniadsZone::getActiveZoneByTitle($zone);
 			}
 			if ($zone) {
-				$ad = $this->getAdByZone($zone);
-
-				if($ad) {
-					$ad = $ad->increaseImpressions();
+				$adList = $this->getAdListForDisplaying($zone);
+				foreach ($adList as $ad) {
+					$output .= $ad->forTemplate();
 				}
 			}
+		}
+		return $output;
+	}
+
+	/**
+	 * Gets the ad for the current zone and all subzones
+	 * @param UniadsZone $zone
+	 * @retunr ArrayList with all ads
+	 */
+	public function getAdListForDisplaying(UniadsZone $zone){
+		$adList = ArrayList::create();
+
+		$ad = $this->getRandomAdByZone($zone);
+
+		if($ad) {
+			$ad = $ad->increaseImpressions();
 		}
 
 		if (!$ad) {
@@ -68,19 +82,17 @@ class UniadsExtension extends DataExtension {
 			$ad = new UniadsObject();
 		}
 
-		$output = $ad->forTemplate();
+		$adList->add($ad);
 
-		if ($zone) {
-			foreach ($zone->ChildZones()->sort('Order') as $child) {
-				if ($child->Active) {
-					$output .= $this->DisplayAd($child);
-				}
+		foreach ($zone->ChildZones()->sort('Order') as $child) {
+			if ($child->Active) {
+				$adList->merge($this->getAdListForDisplaying($child));
 			}
 		}
 
-		return $output;
-	}
+		return $adList;
 
+	}
 
 	/**
 	 * Scans over the owning page and all parent pages until it finds the one with the settings for displaying ads
@@ -176,13 +188,15 @@ class UniadsExtension extends DataExtension {
 	 * @param UniadsZone $zone
 	 * @return UniadsObject
 	 */
-	public function getAdByZone(UniadsZone $zone)
+	public function getRandomAdByZone(UniadsZone $zone)
 	{
 		$weight = rand(0, $this->getMaxWeightByZone($zone));
 
+		$randomString = DB::getConn()->random(); //e.g. rand() for mysql, random() for Sqlite3
+
 		$ad =$this->getAdsByZone($zone)
 			->filter(array('Weight:GreaterThanOrEqual' => $weight))
-			->sort('rand()')
+			->sort($randomString)
 			->First();
 		return $ad;
 	}

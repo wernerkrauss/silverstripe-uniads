@@ -56,6 +56,13 @@ class UniadsDisplayAdsTest extends SapphireTest {
 		}
 	}
 
+	public function testSubzones(){
+		$page = $this->objFromFixture('Page', 'using-zone');
+		$zone = $this->objFromFixture('UniadsZone', 'active-zone');
+		$adList = $page->getAdListForDisplaying($zone);
+		$this->assertEquals(2, $adList->count(), 'AdListForDisplay should return an ArrayList with two items');
+	}
+
 	public function testMaxWeight()
 	{
 		$page = $this->objFromFixture('Page', 'using-zone');
