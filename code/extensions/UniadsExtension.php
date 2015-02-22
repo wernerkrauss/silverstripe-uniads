@@ -52,69 +52,10 @@ class UniadsExtension extends DataExtension {
 
 		if ($zone) {
 			if (!is_object($zone)) {
-				$zone = UniadsZone::get()
-					->filter(array(
-						'Title' => $zone,
-						'Active' => 1
-					))
-					->first();
+				$zone = $this->getActiveZoneByTitle($zone);
 			}
 			if ($zone) {
-				$toUse = $this->owner;
-				if ($toUse->InheritSettings) {
-					while ($toUse->ParentID) {
-						if (!$toUse->InheritSettings) {
-							break;
-						}
-						$toUse = $toUse->Parent();
-					}
-					if(!$toUse->ParentID && $toUse->InheritSettings) {
-						$toUse = null;
-					}
-				}
-
-				$UniadsObject = UniadsObject::get()->filter(array(
-					'ZoneID' => $zone->ID,
-					'Active' => 1
-				));
-
-				//filter for Ads not exclusively associated with a page
-				//how to convert this to ORM filter?
-				$UniadsObject = $UniadsObject->where('not exists (select * from Page_Ads pa where pa.UniadsObjectID = UniadsObject.ID)');
-
-				//page specific ads, use only them
-				if ($toUse) {
-					$UniadsObject = $UniadsObject->where("(
-						exists (select * from Page_Ads pa where pa.UniadsObjectID = UniadsObject.ID and pa.PageID = ".$toUse->ID.")
-						or not exists (select * from Page_Ads pa where pa.UniadsObjectID = UniadsObject.ID)
-					)");
-					if ($toUse->UseCampaignID) {
-						$UniadsObject = $UniadsObject->addFilter(array('CampaignID' => $toUse->UseCampaignID));
-					}
-				}
-
-				$UniadsObject = $UniadsObject->leftJoin('UniAdsCampaign', 'c.ID = UniadsObject.CampaignID', 'c');
-
-				//current ads and campaigns
-				$campaignFilter = "(c.ID is null or (
-						c.Active = '1'
-						and (c.Starts <= '" . date('Y-m-d') . "' or c.Starts = '' or c.Starts is null)
-						and (c.Expires >= '" . date('Y-m-d') . "' or c.Expires = '' or c.Expires is null)
-					))
-					and (UniadsObject.Starts <= '" . date('Y-m-d') . "' or UniadsObject.Starts = '' or UniadsObject.Starts is null)
-					and (UniadsObject.Expires >= '" . date('Y-m-d') . "' or UniadsObject.Expires = '' or UniadsObject.Expires is null)
-				";
-
-				$UniadsObject = $UniadsObject->where($campaignFilter);
-
-
-				$weight = rand(0, $UniadsObject->max('Weight'));
-
-				$ad = $UniadsObject
-					->where('(UniadsObject.ImpressionLimit = 0 or UniadsObject.ImpressionLimit > UniadsObject.Impressions)')
-					->filter(array('Weight:GreaterThanOrEqual' => $weight))
-					->sort('rand()')
-					->First();
+				$ad = $this->getAdByZone($zone);
 
 				if($ad) {
 					// now we can log impression
@@ -149,5 +90,140 @@ class UniadsExtension extends DataExtension {
 
 		return $output;
 	}
+
+	/**
+	 * @param string $title
+	 * @return UniadsZone
+	 */
+	public function getActiveZoneByTitle($title)
+	{
+		$zone = UniadsZone::get()
+			->filter(
+				array(
+					'Title' => $title,
+					'Active' => 1
+				)
+			)
+			->first();
+		return $zone;
+	}
+
+	/**
+	 * Scans over the owning page and all parent pages until it finds the one with the settings for displaying ads
+	 * @return null|Page
+	 */
+	public function getPageWithSettingsForAds()
+	{
+		$settingsPage = $this->owner;
+		if ($settingsPage->InheritSettings) {
+			while ($settingsPage->ParentID) {
+				if (!$settingsPage->InheritSettings) {
+					break;
+				}
+				$settingsPage = $settingsPage->Parent();
+			}
+			if (!$settingsPage->ParentID && $settingsPage->InheritSettings) {
+				$settingsPage = null;
+				return $settingsPage;
+			}
+			return $settingsPage;
+		}
+		return $settingsPage;
+	}
+
+	/**
+	 * @param $zone
+	 * @return DataList
+	 */
+	public function getBasicFilteredAdListByZone(UniadsZone $zone)
+	{
+		$adsSettingsPage = $this->getPageWithSettingsForAds();
+
+		$UniadsObject = UniadsObject::get()->filter(
+			array(
+				'ZoneID' => $zone->ID,
+				'Active' => 1
+			)
+		);
+
+
+
+		//page specific ads, use only them
+		if ($adsSettingsPage) {
+			$UniadsObject = $UniadsObject->where(
+				"(
+						exists (select * from Page_Ads pa where pa.UniadsObjectID = UniadsObject.ID and pa.PageID = " . $adsSettingsPage->ID . ")
+						or not exists (select * from Page_Ads pa where pa.UniadsObjectID = UniadsObject.ID)
+					)"
+			);
+			if ($adsSettingsPage->UseCampaignID) {
+				$UniadsObject = $UniadsObject->addFilter(array('CampaignID' => $adsSettingsPage->UseCampaignID));
+			}
+		} else {
+			//filter for Ads not exclusively associated with a page
+			//how to convert this to ORM filter?
+			$UniadsObject = $UniadsObject->where(
+				'not exists (select * from Page_Ads pa where pa.UniadsObjectID = UniadsObject.ID)'
+			);
+		}
+
+		$UniadsObject = $UniadsObject->leftJoin('UniadsCampaign', 'c.ID = UniadsObject.CampaignID', 'c');
+
+		//current ads and campaigns
+		$campaignFilter = "(c.ID is null or (
+						c.Active = '1'
+						and (c.Starts <= '" . date('Y-m-d') . "' or c.Starts = '' or c.Starts is null)
+						and (c.Expires >= '" . date('Y-m-d') . "' or c.Expires = '' or c.Expires is null)
+					))
+					and (UniadsObject.Starts <= '" . date('Y-m-d') . "' or UniadsObject.Starts = '' or UniadsObject.Starts is null)
+					and (UniadsObject.Expires >= '" . date('Y-m-d') . "' or UniadsObject.Expires = '' or UniadsObject.Expires is null)
+				";
+
+		$UniadsObject = $UniadsObject->where($campaignFilter);
+		$sql = $UniadsObject->sql();
+		return $UniadsObject;
+	}
+
+	/**
+	 * returns a DataList with all possible Ads in this zone.
+	 * respects ImpressionLimit
+	 *
+	 * @param UniadsZone $zone
+	 * @return DataList
+	 */
+	public function getAdsByZone(UniadsZone $zone){
+		$adList = $this->getBasicFilteredAdListByZone($zone)
+			->where('(UniadsObject.ImpressionLimit = 0 or UniadsObject.ImpressionLimit > UniadsObject.Impressions)');
+
+		return $adList;
+	}
+
+	/**
+	 * @param UniadsZone $zone
+	 * @return UniadsObject
+	 */
+	public function getAdByZone(UniadsZone $zone)
+	{
+		$weight = rand(0, $this->getMaxWeightByZone($zone));
+
+		$ad =$this->getAdsByZone($zone)
+			->filter(array('Weight:GreaterThanOrEqual' => $weight))
+			->sort('rand()')
+			->First();
+		return $ad;
+	}
+
+
+	/**
+	 * @param UniadsZone $zone
+	 * @return string
+	 */
+	public function getMaxWeightByZone(UniadsZone $zone){
+		$UniadsObject = $this->getBasicFilteredAdListByZone($zone);
+		$weight = $UniadsObject->max('Weight');
+
+		return $weight;
+	}
+
 
 }

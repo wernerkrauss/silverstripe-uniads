@@ -1,0 +1,115 @@
+Page:
+  using-zone:
+    Title: 'page using a zone'
+    ID: 1
+    InheritSettings: 0
+  exclusive:
+    Title: 'page with exclusive Ads'
+    ID: 2
+    InheritSettings: 0 #we need this to recognize the exclusive ads...
+  subpage:
+    ID: 3
+    Title: 'subpage with inherit settings'
+    Parent: =>Page.using-zone
+    InheritSettings: 1
+UniadsZone:
+  active-zone:
+    Title: 'ActiveZone'
+    Active: 1
+  inactive-zone:
+    Title: 'InactiveZone'
+    Active: 0
+UniadsCampaign:
+  active-campaign:
+    Active: 1
+    Starts: 2015-01-01
+    Expires: 2099-01-01
+  active-campaign2:
+    Active: 1
+    Starts: 2015-01-01
+  inactive-campaign:
+    Active: 0
+    Starts: 2015-01-01
+    Expires: 2099-01-01
+  old-campaign:
+    Active: 1
+    Starts: 2014-01-01
+    Expires: 2014-12-31
+  future-campaign:
+    Active: 1
+    Starts: 2099-01-01
+    Expires: 2099-12-31
+UniadsObject:
+  exclusive-ad:
+    Active: 1
+    AdInPages: =>Page.exclusive
+    Zone: =>UniadsZone.active-zone
+    Weight: 6
+  default:
+    Active: 1
+    Zone: =>UniadsZone.active-zone
+    Campaign: =>UniadsCampaign.active-campaign
+    Weight: 1
+  default2:
+    Active: 1
+    Zone: =>UniadsZone.active-zone
+    Weight: 4
+  default3:
+    Active: 1
+    Zone: =>UniadsZone.active-zone
+    Campaign: =>UniadsCampaign.active-campaign2
+    Weight: 4
+  with-impressionlimit:
+    Active: 1
+    Zone: =>UniadsZone.active-zone
+    Campaign: =>UniadsCampaign.active-campaign2
+    ImpressionLimit: 10
+    Impressions: 8
+    Weight: 4
+  current:
+    Active: 1
+    Starts: 2015-01-01
+    Expires: 2099-01-01
+    Zone: =>UniadsZone.active-zone
+    Campaign: =>UniadsCampaign.active-campaign2
+    Weight: 4
+  old:
+    Active: 1
+    Starts: 2015-01-01
+    Expires: 2015-01-02
+    Weight: 4
+  future:
+    Active: 1
+    Starts: 2099-01-01
+    Expires: 2099-01-02
+    Weight: 4
+  inactive:
+    Active: 0
+    Zone: =>UniadsZone.active-zone
+    Weight: 9
+  inactive-campagin:
+    Active: 1
+    Zone: =>UniadsZone.active-zone
+    Campaign: =>UniadsCampaign.inactive-campaign
+    Weight: 9
+  old-campagin:
+    Active: 1
+    Zone: =>UniadsZone.active-zone
+    Campaign: =>UniadsCampaign.old-campaign
+    Weight: 9
+  future-campagin:
+    Active: 1
+    Zone: =>UniadsZone.active-zone
+    Campaign: =>UniadsCampaign.future-campaign
+    Weight: 9
+  inactive-zone:
+    Active: 1
+    Active: 0
+    Zone: =>UniadsZone.inactive-zone
+  over-impressionlimit:
+    Active: 1
+    Zone: =>UniadsZone.active-zone
+    Campaign: =>UniadsCampaign.active-campaign2
+    ImpressionLimit: 10
+    Impressions: 10
+    Weight: 4
