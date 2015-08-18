@@ -186,6 +186,7 @@ class UniadsExtension extends DataExtension {
 
 	/**
 	 * @param UniadsZone $zone
+	 * @todo: filter out already displayed ads or campaigns
 	 * @return UniadsObject
 	 */
 	public function getRandomAdByZone(UniadsZone $zone)
@@ -196,9 +197,11 @@ class UniadsExtension extends DataExtension {
 
 		$ad =$this->getAdsByZone($zone)
 			->filter(array('Weight:GreaterThanOrEqual' => $weight))
-			->sort($randomString)
-			->First();
-		return $ad;
+			->sort($randomString);
+
+		$this->owner->extend('UpdateRandomAdByZone', $ad);
+
+		return $ad->First();;
 	}
 
 
