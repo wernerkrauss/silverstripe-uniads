@@ -201,7 +201,7 @@ class UniadsExtension extends DataExtension {
 
 		$this->owner->extend('UpdateRandomAdByZone', $ad);
 
-		return $ad->First();;
+		return $ad->First();
 	}
 
 
