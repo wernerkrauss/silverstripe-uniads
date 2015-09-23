@@ -23,6 +23,13 @@ class UniadsExtension extends DataExtension {
 		'UseCampaign' => 'UniadsCampaign',
 	);
 
+	private static $filter_double_ads = true;
+
+	/**
+	 * @var array cache for ads already shown on this page
+	 */
+	protected static $shown_ad_ids = array();
+
 	private function getListboxOptions($o) {
 		$list = new DataList($o);
 		return array('' => '') + $list->map()->toArray();
@@ -57,6 +64,7 @@ class UniadsExtension extends DataExtension {
 				$adList = $this->getAdListForDisplaying($zone);
 				foreach ($adList as $ad) {
 					$output .= $ad->forTemplate();
+					self::$shown_ad_ids[] = $ad->ID;
 				}
 			}
 		}
@@ -198,6 +206,12 @@ class UniadsExtension extends DataExtension {
 		$ad =$this->getAdsByZone($zone)
 			->filter(array('Weight:GreaterThanOrEqual' => $weight))
 			->sort($randomString);
+
+		if (Config::inst()->get('UniadsExtension', 'filter_double_ads')) {
+			$ad = $ad->exclude(
+				array('ID' => self::$shown_ad_ids)
+			);
+		}
 
 		$this->owner->extend('UpdateRandomAdByZone', $ad);
 
